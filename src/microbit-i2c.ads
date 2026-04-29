@@ -37,4 +37,7 @@ package Microbit.I2C is
       Data    : System.Address;
       Length  : Natural);
 
+   function Check_Error return Boolean;
+
+
 end Microbit.I2C;

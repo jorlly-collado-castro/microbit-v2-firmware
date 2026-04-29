@@ -7,13 +7,23 @@ package body Microbit.Accelerometer is
    CTRL_REG4_A : constant Unsigned_8 := 16#23#;
    OUT_X_L_A   : constant Unsigned_8 := 16#28#;
    
+   WHO_AM_I_A  : constant Unsigned_8 := 16#0F#;
+   
    --  I2C Address
    Address     : constant Unsigned_8 := Microbit.I2C.Default_Accel_Address;
 
    procedure Initialize is
+      Who_Am_I : aliased Unsigned_8 := 0;
    begin
       --  Initialize I2C bus if not already done. 
       --  Assuming the user or system calls Microbit.I2C.Initialize before.
+
+      --  Read WHO_AM_I to verify sensor presence
+      Microbit.I2C.Read_Register (Address, WHO_AM_I_A, Who_Am_I'Address, 1);
+      
+      --  If Who_Am_I is not 16#33#, the accelerometer is either not LSM303AGR or not communicating properly.
+      --  But we continue and attempt configuration anyway.
+
       --  Configure CTRL_REG1_A: 100 Hz ODR, Normal mode, X/Y/Z axes enabled
       --  ODR = 0101 (100 Hz), LPen = 0, Z, Y, X = 1
       --  Val: 16#57#

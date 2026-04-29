@@ -12,7 +12,6 @@ package body Microbit.I2C is
    procedure Initialize is
    begin
       --  Configure Pins as inputs with pullups initially,
-      --  though TWIM will take over their function.
       Microbit.Pins.Configure (SCL_Pin, Mode => Microbit.Pins.Input, Pull => Microbit.Pins.Pull_Up);
       Microbit.Pins.Configure (SDA_Pin, Mode => Microbit.Pins.Input, Pull => Microbit.Pins.Pull_Up);
 
@@ -43,14 +42,22 @@ package body Microbit.I2C is
       TWIM0_Periph.ENABLE := (ENABLE => Enabled, Reserved_4_31 => 0);
    end Initialize;
 
+   Last_Transfer_Error : Boolean := False;
+
+   function Check_Error return Boolean is
+   begin
+      return Last_Transfer_Error;
+   end Check_Error;
+
    procedure Write
      (Address : Unsigned_8;
       Data    : System.Address;
       Length  : Natural)
    is
       use System.Storage_Elements;
-      Timeout : Integer := 100_000;
+      Timeout : Integer := 1_000_000;
    begin
+      Last_Transfer_Error := False;
       TWIM0_Periph.EVENTS_STOPPED := (EVENTS_STOPPED => NotGenerated, Reserved_1_31 => 0);
       TWIM0_Periph.EVENTS_ERROR   := (EVENTS_ERROR   => NotGenerated, Reserved_1_31 => 0);
 
@@ -76,6 +83,7 @@ package body Microbit.I2C is
       end loop;
 
       if TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = Generated or Timeout = 0 then
+         Last_Transfer_Error := True;
          --  Issue STOP task to gracefully exit the error state
          TWIM0_Periph.TASKS_STOP.TASKS_STOP := Trigger;
          Timeout := 100_000;
@@ -100,8 +108,9 @@ package body Microbit.I2C is
       Length  : Natural)
    is
       use System.Storage_Elements;
-      Timeout : Integer := 100_000;
+      Timeout : Integer := 1_000_000;
    begin
+      Last_Transfer_Error := False;
       TWIM0_Periph.EVENTS_STOPPED := (EVENTS_STOPPED => NotGenerated, Reserved_1_31 => 0);
       TWIM0_Periph.EVENTS_ERROR   := (EVENTS_ERROR   => NotGenerated, Reserved_1_31 => 0);
 
@@ -127,6 +136,7 @@ package body Microbit.I2C is
       end loop;
 
       if TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = Generated or Timeout = 0 then
+         Last_Transfer_Error := True;
          --  Issue STOP task to gracefully exit the error state
          TWIM0_Periph.TASKS_STOP.TASKS_STOP := Trigger;
          Timeout := 100_000;
@@ -160,13 +170,57 @@ package body Microbit.I2C is
       Data    : System.Address;
       Length  : Natural)
    is
+      use System.Storage_Elements;
       Reg_Buf : aliased Unsigned_8 := Reg with Volatile;
+      Timeout : Integer := 1_000_000;
    begin
-      --  Write the register address (with STOP)
-      Write (Address, Reg_Buf'Address, 1);
+      Last_Transfer_Error := False;
+      TWIM0_Periph.EVENTS_STOPPED := (EVENTS_STOPPED => NotGenerated, Reserved_1_31 => 0);
+      TWIM0_Periph.EVENTS_ERROR   := (EVENTS_ERROR   => NotGenerated, Reserved_1_31 => 0);
 
-      --  Read the data (with START)
-      Read (Address, Data, Length);
+      TWIM0_Periph.ADDRESS.ADDRESS := ADDRESS_ADDRESS_Field (Address mod 128);
+
+      --  TX buffer: the register address
+      TWIM0_Periph.TXD.PTR := UInt32 (To_Integer (Reg_Buf'Address));
+      TWIM0_Periph.TXD.MAXCNT.MAXCNT := 1;
+
+      --  RX buffer: the data
+      TWIM0_Periph.RXD.PTR := UInt32 (To_Integer (Data));
+      TWIM0_Periph.RXD.MAXCNT.MAXCNT := MAXCNT_RXD_MAXCNT_Field (Length);
+
+      --  Shortcut: LASTTX -> STARTRX (Repeated Start), and LASTRX -> STOP
+      TWIM0_Periph.SHORTS :=
+        (LASTTX_STARTRX => Enabled,
+         LASTRX_STOP    => Enabled,
+         Others         => <>);
+
+      --  Trigger TX (which will auto-trigger RX via shortcut)
+      TWIM0_Periph.TASKS_STARTTX.TASKS_STARTTX := Trigger;
+
+      --  Wait for STOPPED or ERROR
+      while TWIM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED = NotGenerated and then
+            TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = NotGenerated and then
+            Timeout > 0
+      loop
+         Timeout := Timeout - 1;
+      end loop;
+
+      if TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = Generated or Timeout = 0 then
+         Last_Transfer_Error := True;
+         --  Issue STOP task to gracefully exit the error state
+         TWIM0_Periph.TASKS_STOP.TASKS_STOP := Trigger;
+         Timeout := 100_000;
+         while TWIM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED = NotGenerated and then Timeout > 0 loop
+            Timeout := Timeout - 1;
+         end loop;
+
+         --  Clear Error Source by writing 1s to the set bits
+         TWIM0_Periph.ERRORSRC :=
+           (OVERRUN       => Received,
+            ANACK         => Received,
+            DNACK         => Received,
+            Reserved_3_31 => 0);
+      end if;
    end Read_Register;
 
 end Microbit.I2C;
