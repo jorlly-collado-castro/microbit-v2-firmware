@@ -14,9 +14,15 @@ services:
       echo 'Building blinky example...' &&
       cd blinky &&
       alr --non-interactive build &&
-      echo 'Converting ELF to HEX...' &&
+      echo 'Converting blinky ELF to HEX...' &&
       arm-none-eabi-objcopy -O ihex bin/blinky bin/blinky.hex &&
-      echo 'Done! The blinky.hex file is available in examples/blinky/bin/'
+      cd .. &&
+      echo 'Building console example...' &&
+      cd console &&
+      alr --non-interactive build &&
+      echo 'Converting console ELF to HEX...' &&
+      arm-none-eabi-objcopy -O ihex bin/console bin/console.hex &&
+      echo 'Done! The hex files are available in their respective bin/ directories.'
       "
 
 volumes:

@@ -1,0 +1,14 @@
+name = "console"
+description = "Micro:bit v2 Serial Console Example"
+version = "0.1.0"
+authors = ["Jorlly Collado <jorlly@collado.ch>"]
+licenses = "GPL-3.0-only"
+project-files = ["console.gpr"]
+executables = ["console"]
+
+[[depends-on]]
+microbit_v2 = "*"
+light_tasking_nrf52833 = ">=15.3.0"
+
+[[pins]]
+microbit_v2 = { path='../..' }
