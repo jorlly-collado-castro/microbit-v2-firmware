@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  builder:
+    build: .
+    volumes:
+      - ..:/workspace
+      # Cache Alire's downloaded compilers, tools, and indexes to speed up subsequent builds
+      - alire_config:/root/.config/alire
+      - alire_data:/root/.local/share/alire
+    working_dir: /workspace/examples
+    command: >
+      bash -c "
+      echo 'Building blinky example...' &&
+      cd blinky &&
+      alr build &&
+      echo 'Converting ELF to HEX...' &&
+      arm-none-eabi-objcopy -O ihex bin/blinky bin/blinky.hex &&
+      echo 'Done! The blinky.hex file is available in examples/blinky/bin/'
+      "
+
+volumes:
+  alire_config:
+  alire_data:
