@@ -27,7 +27,7 @@ package Microbit.Pins is
 
    -- Interface MCU UART
    UART_TX : constant Pin_Id := (Port_0, 6);
-   UART_RX : constant Pin_Id := (Port_0, 8);
+   UART_RX : constant Pin_Id := (Port_1, 8);
 
    -- Basic GPIO / Edge Connector
    P0  : constant Pin_Id := (Port_0, 2);

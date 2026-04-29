@@ -10,12 +10,6 @@ package body Microbit.Console is
      (TX_Pin : Microbit.Pins.Pin_Id := Microbit.Pins.UART_TX;
       RX_Pin : Microbit.Pins.Pin_Id := Microbit.Pins.UART_RX)
    is
-      function To_Psel (Pin : Microbit.Pins.Pin_Id) return UInt32 is
-      begin
-         --  Bit 5 sets the port (0 for P0, 1 for P1)
-         --  Bits 0..4 sets the pin number
-         return UInt32 (Pin.Pin) or (UInt32 (Microbit.Pins.Port_Id'Pos (Pin.Port)) * 32);
-      end To_Psel;
    begin
       --  1. Configure GPIO pins
       Microbit.Pins.Configure (TX_Pin, Mode => Microbit.Pins.Output);
@@ -24,11 +18,17 @@ package body Microbit.Console is
       --  2. Configure UARTE0
       UARTE0_Periph.ENABLE := (ENABLE => Disabled, Others => <>);
 
-      UARTE0_Periph.PSEL.TXD.PIN := TXD_PSEL_PIN_Field (To_Psel (TX_Pin));
-      UARTE0_Periph.PSEL.TXD.CONNECT := Connected;
+      UARTE0_Periph.PSEL.TXD :=
+        (PIN     => TXD_PSEL_PIN_Field (TX_Pin.Pin),
+         PORT    => NRF52833_SVD.Bit (Microbit.Pins.Port_Id'Pos (TX_Pin.Port)),
+         CONNECT => Connected,
+         Others  => <>);
 
-      UARTE0_Periph.PSEL.RXD.PIN := RXD_PSEL_PIN_Field (To_Psel (RX_Pin));
-      UARTE0_Periph.PSEL.RXD.CONNECT := Connected;
+      UARTE0_Periph.PSEL.RXD :=
+        (PIN     => RXD_PSEL_PIN_Field (RX_Pin.Pin),
+         PORT    => NRF52833_SVD.Bit (Microbit.Pins.Port_Id'Pos (RX_Pin.Port)),
+         CONNECT => Connected,
+         Others  => <>);
 
       --  115200 baud (0x01D7E000 based on Nordic UARTE specs)
       UARTE0_Periph.BAUDRATE := 16#01D7E000#;
