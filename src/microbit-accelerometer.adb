@@ -64,4 +64,16 @@ package body Microbit.Accelerometer is
       return Result;
    end Read_Data;
 
+   function To_Milli_G (Raw : Axis_Data) return Float_Axis_Data is
+      --  In high-resolution mode (+/- 2g scale), the 12-bit data is left-justified 
+      --  into a 16-bit register. That effectively multiplies the raw value by 16.
+      --  At this scale, 1 LSB (of the 12-bit value) represents roughly 1 mg.
+      --  Therefore, Raw / 16.0 gives the value in mg.
+      Scale_Factor : constant Float := 1.0 / 16.0;
+   begin
+      return (X => Float (Raw.X) * Scale_Factor,
+              Y => Float (Raw.Y) * Scale_Factor,
+              Z => Float (Raw.Z) * Scale_Factor);
+   end To_Milli_G;
+
 end Microbit.Accelerometer;

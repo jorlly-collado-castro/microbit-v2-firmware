@@ -15,6 +15,7 @@ services:
       echo 'Building console...' && cd /workspace/examples/console && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/console bin/console.hex &&
       echo 'Building display...' && cd /workspace/examples/display && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/display bin/display.hex &&
       echo 'Building sensors...' && cd /workspace/examples/sensors && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/sensors bin/sensors.hex &&
+      echo 'Building compass...' && cd /workspace/examples/compass && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/compass bin/compass.hex &&
       echo 'All examples built successfully!'
       "
 
