@@ -13,7 +13,7 @@ services:
       bash -c "
       echo 'Building blinky example...' &&
       cd blinky &&
-      alr build &&
+      alr --non-interactive build &&
       echo 'Converting ELF to HEX...' &&
       arm-none-eabi-objcopy -O ihex bin/blinky bin/blinky.hex &&
       echo 'Done! The blinky.hex file is available in examples/blinky/bin/'
