@@ -1,0 +1,16 @@
+/alire/
+/bin/
+/config/
+/lib/
+/obj/
+*.a
+*.ali
+*.o
+*.bexch
+*.cswi
+*.stderr
+*.stdout
+examples/**/alire/
+examples/**/bin/
+examples/**/config/
+examples/**/obj/
