@@ -10,8 +10,46 @@ package body Microbit.I2C is
    SDA_Pin : constant Microbit.Pins.Pin_Id := (Microbit.Pins.Port_0, 16);
 
    procedure Initialize is
+      --  Small delay loop for software I2C clocking
+      procedure Wait_US (Ticks : Integer := 20) is
+         Dummy : Integer := 0 with Volatile;
+      begin
+         for I in 1 .. Ticks loop
+            Dummy := Dummy + I;
+         end loop;
+      end Wait_US;
    begin
-      --  Configure Pins as inputs with pullups initially,
+      --  I2C Bus Clear (Clock out up to 9 times to free stuck slaves)
+      --  Configure SDA as Input to read, SCL as Output to clock
+      Microbit.Pins.Configure (SDA_Pin, Mode => Microbit.Pins.Input, Pull => Microbit.Pins.Pull_Up);
+      Microbit.Pins.Configure (SCL_Pin, Mode => Microbit.Pins.Output, Pull => Microbit.Pins.Pull_Up);
+      
+      Microbit.Pins.Set (SCL_Pin);
+      Wait_US;
+      
+      for I in 1 .. 9 loop
+         --  If SDA is high, the slave has released the bus
+         if Microbit.Pins.Read (SDA_Pin) then
+            exit;
+         end if;
+         
+         Microbit.Pins.Clear (SCL_Pin);
+         Wait_US;
+         Microbit.Pins.Set (SCL_Pin);
+         Wait_US;
+      end loop;
+      
+      --  Send a STOP condition: SDA goes low while SCL is low, then SCL goes high, then SDA goes high
+      Microbit.Pins.Configure (SDA_Pin, Mode => Microbit.Pins.Output, Pull => Microbit.Pins.Pull_Up);
+      Microbit.Pins.Clear (SDA_Pin);
+      Microbit.Pins.Clear (SCL_Pin);
+      Wait_US;
+      Microbit.Pins.Set (SCL_Pin);
+      Wait_US;
+      Microbit.Pins.Set (SDA_Pin);
+      Wait_US;
+
+      --  Configure Pins as inputs with pullups initially before handing over to TWIM
       Microbit.Pins.Configure (SCL_Pin, Mode => Microbit.Pins.Input, Pull => Microbit.Pins.Pull_Up);
       Microbit.Pins.Configure (SDA_Pin, Mode => Microbit.Pins.Input, Pull => Microbit.Pins.Pull_Up);
 
@@ -150,6 +188,10 @@ package body Microbit.I2C is
             ANACK         => Received,
             DNACK         => Received,
             Reserved_3_31 => 0);
+            
+         --  Robust recovery: disable and re-enable the TWIM peripheral
+         TWIM0_Periph.ENABLE := (ENABLE => Disabled, Reserved_4_31 => 0);
+         TWIM0_Periph.ENABLE := (ENABLE => Enabled, Reserved_4_31 => 0);
       end if;
    end Read;
 
@@ -220,6 +262,10 @@ package body Microbit.I2C is
             ANACK         => Received,
             DNACK         => Received,
             Reserved_3_31 => 0);
+            
+         --  Robust recovery: disable and re-enable the TWIM peripheral
+         TWIM0_Periph.ENABLE := (ENABLE => Disabled, Reserved_4_31 => 0);
+         TWIM0_Periph.ENABLE := (ENABLE => Enabled, Reserved_4_31 => 0);
       end if;
    end Read_Register;
 

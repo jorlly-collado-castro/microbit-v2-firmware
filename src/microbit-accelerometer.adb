@@ -1,4 +1,5 @@
 with Microbit.I2C;
+with Ada.Real_Time; use Ada.Real_Time;
 
 package body Microbit.Accelerometer is
 
@@ -6,7 +7,6 @@ package body Microbit.Accelerometer is
    CTRL_REG1_A : constant Unsigned_8 := 16#20#;
    CTRL_REG4_A : constant Unsigned_8 := 16#23#;
    OUT_X_L_A   : constant Unsigned_8 := 16#28#;
-   
    WHO_AM_I_A  : constant Unsigned_8 := 16#0F#;
    
    --  I2C Address
@@ -15,6 +15,10 @@ package body Microbit.Accelerometer is
    procedure Initialize is
       Who_Am_I : aliased Unsigned_8 := 0;
    begin
+      --  The LSM303AGR requires at least 6.4ms after power-up before it
+      --  can reliably respond to I2C commands.
+      delay until Clock + Milliseconds (10);
+
       --  Initialize I2C bus if not already done. 
       --  Assuming the user or system calls Microbit.I2C.Initialize before.
 
