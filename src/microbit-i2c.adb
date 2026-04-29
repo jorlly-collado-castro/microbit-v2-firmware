@@ -21,7 +21,7 @@ package body Microbit.I2C is
       NRF52833_SVD.GPIO.P0_Periph.PIN_CNF (Integer (SDA_Pin.Pin)).DRIVE := NRF52833_SVD.GPIO.S0D1;
 
       --  Disable TWIM0 before configuration
-      TWIM0_Periph.ENABLE.ENABLE := Disabled;
+      TWIM0_Periph.ENABLE := (ENABLE => Disabled, Reserved_4_31 => 0);
 
       --  Set SCL and SDA pins
       TWIM0_Periph.PSEL.SCL :=
@@ -40,7 +40,7 @@ package body Microbit.I2C is
       TWIM0_Periph.FREQUENCY := 16#01980000#;
 
       --  Enable TWIM0
-      TWIM0_Periph.ENABLE.ENABLE := Enabled;
+      TWIM0_Periph.ENABLE := (ENABLE => Enabled, Reserved_4_31 => 0);
    end Initialize;
 
    procedure Write
@@ -49,11 +49,10 @@ package body Microbit.I2C is
       Length  : Natural)
    is
       use System.Storage_Elements;
+      Timeout : Integer := 100_000;
    begin
-      --  Wait until any previous stop or error is handled
-      --  Not needed in typical bare-metal sequential unless interrupts are mixed
-      TWIM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED := NotGenerated;
-      TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR := NotGenerated;
+      TWIM0_Periph.EVENTS_STOPPED := (EVENTS_STOPPED => NotGenerated, Reserved_1_31 => 0);
+      TWIM0_Periph.EVENTS_ERROR   := (EVENTS_ERROR   => NotGenerated, Reserved_1_31 => 0);
 
       TWIM0_Periph.ADDRESS.ADDRESS := ADDRESS_ADDRESS_Field (Address mod 128);
 
@@ -70,16 +69,18 @@ package body Microbit.I2C is
 
       --  Wait for STOPPED or ERROR
       while TWIM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED = NotGenerated and then
-            TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = NotGenerated
+            TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = NotGenerated and then
+            Timeout > 0
       loop
-         null;
+         Timeout := Timeout - 1;
       end loop;
 
-      if TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = Generated then
+      if TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = Generated or Timeout = 0 then
          --  Issue STOP task to gracefully exit the error state
          TWIM0_Periph.TASKS_STOP.TASKS_STOP := Trigger;
-         while TWIM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED = NotGenerated loop
-            null;
+         Timeout := 100_000;
+         while TWIM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED = NotGenerated and then Timeout > 0 loop
+            Timeout := Timeout - 1;
          end loop;
 
          --  Clear Error Source by writing 1s to the set bits
@@ -99,9 +100,10 @@ package body Microbit.I2C is
       Length  : Natural)
    is
       use System.Storage_Elements;
+      Timeout : Integer := 100_000;
    begin
-      TWIM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED := NotGenerated;
-      TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR := NotGenerated;
+      TWIM0_Periph.EVENTS_STOPPED := (EVENTS_STOPPED => NotGenerated, Reserved_1_31 => 0);
+      TWIM0_Periph.EVENTS_ERROR   := (EVENTS_ERROR   => NotGenerated, Reserved_1_31 => 0);
 
       TWIM0_Periph.ADDRESS.ADDRESS := ADDRESS_ADDRESS_Field (Address mod 128);
 
@@ -118,21 +120,21 @@ package body Microbit.I2C is
 
       --  Wait for STOPPED or ERROR
       while TWIM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED = NotGenerated and then
-            TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = NotGenerated
+            TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = NotGenerated and then
+            Timeout > 0
       loop
-         null;
+         Timeout := Timeout - 1;
       end loop;
 
-      if TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = Generated then
+      if TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = Generated or Timeout = 0 then
          --  Issue STOP task to gracefully exit the error state
          TWIM0_Periph.TASKS_STOP.TASKS_STOP := Trigger;
-         while TWIM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED = NotGenerated loop
-            null;
+         Timeout := 100_000;
+         while TWIM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED = NotGenerated and then Timeout > 0 loop
+            Timeout := Timeout - 1;
          end loop;
 
          --  Clear Error Source by writing 1s to the set bits
-         --  Since we don't have a read-modify-write without resetting,
-         --  we just write 1 to all error flags.
          TWIM0_Periph.ERRORSRC :=
            (OVERRUN       => Received,
             ANACK         => Received,

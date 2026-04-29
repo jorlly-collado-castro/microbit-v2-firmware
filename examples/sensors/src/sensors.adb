@@ -12,8 +12,10 @@ begin
    Microbit.Console.Initialize;
    Microbit.Console.Put_Line ("Sensors Example Started");
 
+   Microbit.Console.Put_Line ("Init I2C...");
    --  Initialize I2C bus and Accelerometer
    Microbit.I2C.Initialize;
+   Microbit.Console.Put_Line ("I2C Init Done. Init Accel...");
    Microbit.Accelerometer.Initialize;
 
    Microbit.Console.Put_Line ("Accelerometer Initialized");
