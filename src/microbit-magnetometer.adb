@@ -16,12 +16,12 @@ package body Microbit.Magnetometer is
    function To_Int16 is new Ada.Unchecked_Conversion (Source => Unsigned_16, Target => Integer_16);
 
    procedure Initialize is
-      Who_Am_I : aliased Unsigned_8 := 0;
+      Who_Am_I : aliased Microbit.I2C.Data_Buffer (1 .. 1) := (others => 0);
    begin
       delay until Clock + Milliseconds (10);
 
       --  Read WHO_AM_I to verify sensor presence
-      Microbit.I2C.Read_Register (Address, WHO_AM_I_M, Who_Am_I'Address, 1);
+      Microbit.I2C.Read_Register (Address, WHO_AM_I_M, Who_Am_I);
 
       --  Configure CFG_REG_A_M: 
       --  100 Hz ODR, Continuous mode
@@ -38,14 +38,14 @@ package body Microbit.Magnetometer is
    end Initialize;
 
    function Read_Data return Axis_Data is
-      Buf : aliased array (1 .. 6) of Unsigned_8 := (others => 0);
+      Buf : aliased Microbit.I2C.Data_Buffer (1 .. 6) := (others => 0);
       Result : Axis_Data;
       UX, UY, UZ : Unsigned_16;
    begin
       --  Set MSB of register address to 1 for auto-increment? 
       --  The magnetometer datasheet for LSM303AGR says auto-increment is enabled by default for magnetometer.
       --  We just read 6 bytes from OUTX_L_REG_M.
-      Microbit.I2C.Read_Register (Address, OUTX_L_REG_M, Buf'Address, 6);
+      Microbit.I2C.Read_Register (Address, OUTX_L_REG_M, Buf);
 
       UX := Shift_Left (Unsigned_16 (Buf (2)), 8) or Unsigned_16 (Buf (1));
       UY := Shift_Left (Unsigned_16 (Buf (4)), 8) or Unsigned_16 (Buf (3));

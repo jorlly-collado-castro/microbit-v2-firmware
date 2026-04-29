@@ -1,3 +1,4 @@
+with System;
 with NRF52833_SVD.TWIM; use NRF52833_SVD.TWIM;
 with NRF52833_SVD.GPIO;
 with NRF52833_SVD;     use NRF52833_SVD;
@@ -89,8 +90,7 @@ package body Microbit.I2C is
 
    procedure Write
      (Address : Unsigned_8;
-      Data    : System.Address;
-      Length  : Natural)
+      Data    : Data_Buffer)
    is
       use System.Storage_Elements;
       Timeout : Integer := 1_000_000;
@@ -101,8 +101,8 @@ package body Microbit.I2C is
 
       TWIM0_Periph.ADDRESS.ADDRESS := ADDRESS_ADDRESS_Field (Address mod 128);
 
-      TWIM0_Periph.TXD.PTR := UInt32 (To_Integer (Data));
-      TWIM0_Periph.TXD.MAXCNT.MAXCNT := MAXCNT_TXD_MAXCNT_Field (Length);
+      TWIM0_Periph.TXD.PTR := UInt32 (To_Integer (Data'Address));
+      TWIM0_Periph.TXD.MAXCNT.MAXCNT := MAXCNT_TXD_MAXCNT_Field (Data'Length);
 
       --  Shortcut LASTTX -> STOP
       TWIM0_Periph.SHORTS :=
@@ -142,8 +142,7 @@ package body Microbit.I2C is
 
    procedure Read
      (Address : Unsigned_8;
-      Data    : System.Address;
-      Length  : Natural)
+      Data    : out Data_Buffer)
    is
       use System.Storage_Elements;
       Timeout : Integer := 1_000_000;
@@ -154,8 +153,8 @@ package body Microbit.I2C is
 
       TWIM0_Periph.ADDRESS.ADDRESS := ADDRESS_ADDRESS_Field (Address mod 128);
 
-      TWIM0_Periph.RXD.PTR := UInt32 (To_Integer (Data));
-      TWIM0_Periph.RXD.MAXCNT.MAXCNT := MAXCNT_RXD_MAXCNT_Field (Length);
+      TWIM0_Periph.RXD.PTR := UInt32 (To_Integer (Data'Address));
+      TWIM0_Periph.RXD.MAXCNT.MAXCNT := MAXCNT_RXD_MAXCNT_Field (Data'Length);
 
       --  Shortcut LASTRX -> STOP
       TWIM0_Periph.SHORTS :=
@@ -201,16 +200,15 @@ package body Microbit.I2C is
       Val     : Unsigned_8)
    is
       --  EasyDMA needs data in RAM, so we copy it to a local array
-      Buf : aliased array (1 .. 2) of Unsigned_8 := (Reg, Val) with Volatile;
+      Buf : aliased Data_Buffer (1 .. 2) := (Reg, Val) with Volatile;
    begin
-      Write (Address, Buf'Address, 2);
+      Write (Address, Buf);
    end Write_Register;
 
    procedure Read_Register
      (Address : Unsigned_8;
       Reg     : Unsigned_8;
-      Data    : System.Address;
-      Length  : Natural)
+      Data    : out Data_Buffer)
    is
       use System.Storage_Elements;
       Reg_Buf : aliased Unsigned_8 := Reg with Volatile;
@@ -227,8 +225,8 @@ package body Microbit.I2C is
       TWIM0_Periph.TXD.MAXCNT.MAXCNT := 1;
 
       --  RX buffer: the data
-      TWIM0_Periph.RXD.PTR := UInt32 (To_Integer (Data));
-      TWIM0_Periph.RXD.MAXCNT.MAXCNT := MAXCNT_RXD_MAXCNT_Field (Length);
+      TWIM0_Periph.RXD.PTR := UInt32 (To_Integer (Data'Address));
+      TWIM0_Periph.RXD.MAXCNT.MAXCNT := MAXCNT_RXD_MAXCNT_Field (Data'Length);
 
       --  Shortcut: LASTTX -> STARTRX (Repeated Start), and LASTRX -> STOP
       TWIM0_Periph.SHORTS :=

@@ -16,7 +16,7 @@ package body Microbit.Accelerometer is
    function To_Int16 is new Ada.Unchecked_Conversion (Source => Unsigned_16, Target => Integer_16);
 
    procedure Initialize is
-      Who_Am_I : aliased Unsigned_8 := 0;
+      Who_Am_I : aliased Microbit.I2C.Data_Buffer (1 .. 1) := (others => 0);
    begin
       --  The LSM303AGR requires at least 6.4ms after power-up before it
       --  can reliably respond to I2C commands.
@@ -26,7 +26,7 @@ package body Microbit.Accelerometer is
       --  Assuming the user or system calls Microbit.I2C.Initialize before.
 
       --  Read WHO_AM_I to verify sensor presence
-      Microbit.I2C.Read_Register (Address, WHO_AM_I_A, Who_Am_I'Address, 1);
+      Microbit.I2C.Read_Register (Address, WHO_AM_I_A, Who_Am_I);
       
       --  If Who_Am_I is not 16#33#, the accelerometer is either not LSM303AGR or not communicating properly.
       --  But we continue and attempt configuration anyway.
@@ -44,12 +44,12 @@ package body Microbit.Accelerometer is
 
    function Read_Data return Axis_Data is
       --  Data buffer for X_L, X_H, Y_L, Y_H, Z_L, Z_H
-      Buf : aliased array (1 .. 6) of Unsigned_8 := (others => 0);
+      Buf : aliased Microbit.I2C.Data_Buffer (1 .. 6) := (others => 0);
       Result : Axis_Data;
       UX, UY, UZ : Unsigned_16;
    begin
       --  Set MSB of register address to 1 to enable auto-increment for reading multiple bytes
-      Microbit.I2C.Read_Register (Address, OUT_X_L_A or 16#80#, Buf'Address, 6);
+      Microbit.I2C.Read_Register (Address, OUT_X_L_A or 16#80#, Buf);
 
       --  Combine high and low bytes into 16-bit unsigned integers safely
       UX := Shift_Left (Unsigned_16 (Buf (2)), 8) or Unsigned_16 (Buf (1));
