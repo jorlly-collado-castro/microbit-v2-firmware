@@ -1,5 +1,6 @@
 with NRF52833_SVD.GPIO; use NRF52833_SVD.GPIO;
 with NRF52833_SVD;      use NRF52833_SVD;
+with Interfaces;        use Interfaces;
 
 package body Microbit.Pins is
 
@@ -39,37 +40,31 @@ package body Microbit.Pins is
    end Configure;
 
    procedure Set (Pin : Pin_Id) is
+      Mask : constant UInt32 := UInt32 (Shift_Left (Unsigned_32'(1), Natural (Pin.Pin)));
    begin
       if Pin.Port = Port_0 then
-         P0_Periph.OUTSET.Arr (Integer (Pin.Pin)) := Set;
+         P0_Periph.OUTSET.Val := Mask;
       else
-         P1_Periph.OUTSET.Arr (Integer (Pin.Pin)) := Set;
+         P1_Periph.OUTSET.Val := Mask;
       end if;
    end Set;
 
    procedure Clear (Pin : Pin_Id) is
+      Mask : constant UInt32 := UInt32 (Shift_Left (Unsigned_32'(1), Natural (Pin.Pin)));
    begin
       if Pin.Port = Port_0 then
-         P0_Periph.OUTCLR.Arr (Integer (Pin.Pin)) := Clear;
+         P0_Periph.OUTCLR.Val := Mask;
       else
-         P1_Periph.OUTCLR.Arr (Integer (Pin.Pin)) := Clear;
+         P1_Periph.OUTCLR.Val := Mask;
       end if;
    end Clear;
 
    procedure Toggle (Pin : Pin_Id) is
    begin
-      if Pin.Port = Port_0 then
-         if P0_Periph.OUT_k.Arr (Integer (Pin.Pin)) = High then
-            Clear (Pin);
-         else
-            Set (Pin);
-         end if;
+      if Read (Pin) then
+         Clear (Pin);
       else
-         if P1_Periph.OUT_k.Arr (Integer (Pin.Pin)) = High then
-            Clear (Pin);
-         else
-            Set (Pin);
-         end if;
+         Set (Pin);
       end if;
    end Toggle;
 
