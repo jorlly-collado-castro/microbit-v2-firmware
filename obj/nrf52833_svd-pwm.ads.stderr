@@ -1,0 +1,2 @@
+nrf52833_svd-pwm.ads:36:06: warning: unnecessary with of ancestor [-gnatwr]
+nrf52833_svd-pwm.ads:1194:19: warning: 128 bits of "PWM_SEQ_Cluster" unused [enabled by default]

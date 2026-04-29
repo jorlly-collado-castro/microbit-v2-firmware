@@ -1,0 +1,2 @@
+nrf52833_svd-power.ads:36:06: warning: unnecessary with of ancestor [-gnatwr]
+nrf52833_svd-power.ads:2447:19: warning: 32 bits of "POWER_RAM_Cluster" unused [enabled by default]

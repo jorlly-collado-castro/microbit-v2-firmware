@@ -1,0 +1,2 @@
+nrf52833_svd-fpu.ads:36:06: warning: unnecessary with of ancestor [-gnatwr]
+nrf52833_svd-fpu.ads:37:06: warning: unit "System" is not referenced [-gnatwu]

@@ -1,0 +1,208 @@
+V "GNAT Lib v15"
+A -O2
+A -gnatA
+A --RTS=/home/user/.local/share/alire/toolchains/gnat_arm_elf_15.2.1_a5e9cfb1/arm-eabi/lib/gnat/light-tasking-nrf52833/
+A -mlittle-endian
+A -mthumb
+A -mfloat-abi=hard
+A -mfpu=fpv4-sp-d16
+A -mcpu=cortex-m4
+A -fno-tree-loop-distribute-patterns
+A -g
+A -gnatwa
+A -gnatQ
+A -gnat12
+A -gnatw.X
+A -mfloat-abi=hard
+A -mfpu=fpv4-sp-d16
+A -mlibarch=armv7e-m+fp
+A -march=armv7e-m+fp
+P DB LC TF ZX
+
+RN
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_ASPECT_SPECIFICATIONS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLEMENTATION_RESTRICTIONS
+RV NO_IMPLICIT_LOOPS
+RR NO_ELABORATION_CODE
+
+U nrf52833_svd.gpio%s	nrf52833_svd-gpio.ads	746845fb NE OO PR PK IU
+W nrf52833_svd%s	nrf52833_svd.ads	nrf52833_svd.ali
+W system%s		system.ads		system.ali
+Z system.unsigned_types%s  s-unstyp.ads		s-unstyp.ali
+
+D nrf52833_svd.ads	20260429062434 fc8c4789 nrf52833_svd%s
+D nrf52833_svd-gpio.ads	20260429062301 e8990282 nrf52833_svd.gpio%s
+D system.ads		20250828113340 9cf14779 system%s
+D s-unstyp.ads		20250828113340 fa2a7f59 system.unsigned_types%s
+G a e
+G c Z s s [Tout_pin_field_arrayBIP nrf52833_svd__gpio 58 4 none]
+G c Z s s [out_registerIP nrf52833_svd__gpio 62 9 none]
+G c Z s s [Toutset_pin_field_arrayBIP nrf52833_svd__gpio 105 4 none]
+G c Z s s [outset_registerIP nrf52833_svd__gpio 109 9 none]
+G c Z s s [Toutclr_pin_field_arrayBIP nrf52833_svd__gpio 152 4 none]
+G c Z s s [outclr_registerIP nrf52833_svd__gpio 156 9 none]
+G c Z s s [Tin_pin_field_arrayBIP nrf52833_svd__gpio 188 4 none]
+G c Z s s [in_registerIP nrf52833_svd__gpio 192 9 none]
+G c Z s s [Tdir_pin_field_arrayBIP nrf52833_svd__gpio 224 4 none]
+G c Z s s [dir_registerIP nrf52833_svd__gpio 228 9 none]
+G c Z s s [Tdirset_pin_field_arrayBIP nrf52833_svd__gpio 271 4 none]
+G c Z s s [dirset_registerIP nrf52833_svd__gpio 275 9 none]
+G c Z s s [Tdirclr_pin_field_arrayBIP nrf52833_svd__gpio 318 4 none]
+G c Z s s [dirclr_registerIP nrf52833_svd__gpio 322 9 none]
+G c Z s s [Tlatch_pin_field_arrayBIP nrf52833_svd__gpio 355 4 none]
+G c Z s s [latch_registerIP nrf52833_svd__gpio 360 9 none]
+G c Z s s [detectmode_registerIP nrf52833_svd__gpio 392 9 none]
+G c Z s s [pin_cnf_registerIP nrf52833_svd__gpio 487 9 none]
+G c Z s s [Tpin_cnf_registersBIP nrf52833_svd__gpio 520 4 none]
+G c Z s s [gpio_peripheralIP nrf52833_svd__gpio 527 9 none]
+X 1 nrf52833_svd.ads
+6K9*NRF52833_SVD 180e17 2|36w6 39r9 68r19 115r19 162r19 198r19 234r19 281r19
+. 328r19 366r19 395r24 397r23 489r45 491r47 493r46 495r24 497r47 499r24 501r47
+. 503r24 573r5
+18M9*UInt4 2|495r37
+21M9*UInt5 2|499r37
+48M9*UInt14 2|503r37
+99M9*UInt31 2|397r36
+102M9*UInt32 2|68r32 115r32 162r32 198r32 234r32 281r32 328r32 366r32
+113m4*P0_Base{3|90M9} 2|567r30
+114m4*P1_Base{3|90M9} 2|571r30
+X 2 nrf52833_svd-gpio.ads
+39K22*GPIO 1|6k9 2|395r37 489r58 491r60 493r59 497r60 501r60 573l18 573e22
+47E9*OUT_PIN0_Field 52e6 53r8 58r51
+49n7*Low{47E9} 54r7
+51n7*High{47E9} 55r7
+58A9*OUT_PIN_Field_Array(47E9)<integer> 71r19
+62R9*OUT_Register 63d7 74e6 77r8 529r28
+63b7*As_Array{boolean} 65r12
+68m13*Val{1|102M9} 78r7
+71a13*Arr{58A9} 79r7
+83E9*OUTSET_PIN0_Field 88e6 89r8
+85n7*Low{83E9} 90r7
+87n7*High{83E9} 91r7
+94E9*OUTSET_PIN0_Field_1 99e6 100r8 105r54
+96n7*OUTSET_PIN0_Field_Reset{94E9} 101r7
+98n7*Set{94E9} 102r7
+105A9*OUTSET_PIN_Field_Array(94E9)<integer> 118r19
+109R9*OUTSET_Register 110d7 121e6 124r8 531r28
+110b7*As_Array{boolean} 112r12
+115m13*Val{1|102M9} 125r7
+118a13*Arr{105A9} 126r7
+130E9*OUTCLR_PIN0_Field 135e6 136r8
+132n7*Low{130E9} 137r7
+134n7*High{130E9} 138r7
+141E9*OUTCLR_PIN0_Field_1 146e6 147r8 152r54
+143n7*OUTCLR_PIN0_Field_Reset{141E9} 148r7
+145n7*Clear{141E9} 149r7
+152A9*OUTCLR_PIN_Field_Array(141E9)<integer> 165r19
+156R9*OUTCLR_Register 157d7 168e6 171r8 533r28
+157b7*As_Array{boolean} 159r12
+162m13*Val{1|102M9} 172r7
+165a13*Arr{152A9} 173r7
+177E9*IN_PIN0_Field 182e6 183r8 188r50
+179n7*Low{177E9} 184r7
+181n7*High{177E9} 185r7
+188A9*IN_PIN_Field_Array(177E9)<integer> 201r19
+192R9*IN_Register 193d7 204e6 207r8 535r28
+193b7*As_Array{boolean} 195r12
+198m13*Val{1|102M9} 208r7
+201a13*Arr{188A9} 209r7
+213E9*DIR_PIN0_Field 218e6 219r8 224r51
+215n7*Input{213E9} 220r7
+217n7*Output{213E9} 221r7
+224A9*DIR_PIN_Field_Array(213E9)<integer> 237r19
+228R9*DIR_Register 229d7 240e6 243r8 537r28
+229b7*As_Array{boolean} 231r12
+234m13*Val{1|102M9} 244r7
+237a13*Arr{224A9} 245r7
+249E9*DIRSET_PIN0_Field 254e6 255r8
+251n7*Input{249E9} 256r7
+253n7*Output{249E9} 257r7
+260E9*DIRSET_PIN0_Field_1 265e6 266r8 271r54
+262n7*DIRSET_PIN0_Field_Reset{260E9} 267r7
+264n7*Set{260E9} 268r7
+271A9*DIRSET_PIN_Field_Array(260E9)<integer> 284r19
+275R9*DIRSET_Register 276d7 287e6 290r8 539r28
+276b7*As_Array{boolean} 278r12
+281m13*Val{1|102M9} 291r7
+284a13*Arr{271A9} 292r7
+296E9*DIRCLR_PIN0_Field 301e6 302r8
+298n7*Input{296E9} 303r7
+300n7*Output{296E9} 304r7
+307E9*DIRCLR_PIN0_Field_1 312e6 313r8 318r54
+309n7*DIRCLR_PIN0_Field_Reset{307E9} 314r7
+311n7*Clear{307E9} 315r7
+318A9*DIRCLR_PIN_Field_Array(307E9)<integer> 331r19
+322R9*DIRCLR_Register 323d7 334e6 337r8 541r28
+323b7*As_Array{boolean} 325r12
+328m13*Val{1|102M9} 338r7
+331a13*Arr{318A9} 339r7
+344E9*LATCH_PIN0_Field 349e6 350r8 355r53
+346n7*NotLatched{344E9} 351r7
+348n7*Latched{344E9} 352r7
+355A9*LATCH_PIN_Field_Array(344E9)<integer> 369r19
+360R9*LATCH_Register 361d7 372e6 375r8 544r28
+361b7*As_Array{boolean} 363r12
+366m13*Val{1|102M9} 376r7
+369a13*Arr{355A9} 377r7
+381E9*DETECTMODE_DETECTMODE_Field 386e6 387r8 394r23
+383n7*Default{381E9} 388r7 395r42
+385n7*LDETECT{381E9} 389r7
+392R9*DETECTMODE_Register 399e6 402r8 546r28
+394e7*DETECTMODE{381E9} 403r7
+397m7*Reserved_1_31{1|99M9} 404r7
+408E9*PIN_CNF_DIR_Field 413e6 414r8 489r24
+410n7*Input{408E9} 415r7 489r63
+412n7*Output{408E9} 416r7
+419E9*PIN_CNF_INPUT_Field 424e6 425r8 491r24
+421n7*Connect{419E9} 426r7
+423n7*Disconnect{419E9} 427r7 491r65
+430E9*PIN_CNF_PULL_Field 437e6 438r8 493r24
+432n7*Disabled{430E9} 439r7 493r64
+434n7*Pulldown{430E9} 440r7
+436n7*Pullup{430E9} 441r7
+444E9*PIN_CNF_DRIVE_Field 461e6 462r8 497r24
+446n7*S0S1{444E9} 463r7 497r65
+448n7*H0S1{444E9} 464r7
+450n7*S0H1{444E9} 465r7
+452n7*H0H1{444E9} 466r7
+454n7*D0S1{444E9} 467r7
+456n7*D0H1{444E9} 468r7
+458n7*S0D1{444E9} 469r7
+460n7*H0D1{444E9} 470r7
+473E9*PIN_CNF_SENSE_Field 480e6 481r8 501r24
+475n7*Disabled{473E9} 482r7 501r65
+477n7*High{473E9} 483r7
+479n7*Low{473E9} 484r7
+487R9*PIN_CNF_Register 505e6 508r8 520r49
+489e7*DIR{408E9} 509r7
+491e7*INPUT{419E9} 510r7
+493e7*PULL{430E9} 511r7
+495m7*Reserved_4_7{1|18M9} 512r7
+497e7*DRIVE{444E9} 513r7
+499m7*Reserved_11_15{1|21M9} 514r7
+501e7*SENSE{473E9} 515r7
+503m7*Reserved_18_31{1|48M9} 516r7
+520A9*PIN_CNF_Registers(487R9)<integer> 548r28
+527R9*GPIO_Peripheral 550e6 552r8 566r24 570r24
+529r7*OUT_k{62R9} 553r7
+531r7*OUTSET{109R9} 554r7
+533r7*OUTCLR{156R9} 555r7
+535r7*IN_k{192R9} 556r7
+537r7*DIR{228R9} 557r7
+539r7*DIRSET{275R9} 558r7
+541r7*DIRCLR{322R9} 559r7
+544r7*LATCH{360R9} 560r7
+546r7*DETECTMODE{392R9} 561r7
+548a7*PIN_CNF{520A9} 562r7
+566r4*P0_Periph{527R9}
+570r4*P1_Periph{527R9}
+X 3 system.ads
+60K9*System 2|37w6 75r24 122r24 169r24 205r24 241r24 288r24 335r24 373r24
+. 400r24 506r24 3|176e11
+90M9*Address
+114n41*Low_Order_First{114E9} 2|75r31 122r31 169r31 205r31 241r31 288r31
+. 335r31 373r31 400r31 506r31
+

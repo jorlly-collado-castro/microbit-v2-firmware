@@ -1,0 +1,174 @@
+V "GNAT Lib v15"
+A -O2
+A -gnatA
+A --RTS=/home/user/.local/share/alire/toolchains/gnat_arm_elf_15.2.1_a5e9cfb1/arm-eabi/lib/gnat/light-tasking-nrf52833/
+A -mlittle-endian
+A -mthumb
+A -mfloat-abi=hard
+A -mfpu=fpv4-sp-d16
+A -mcpu=cortex-m4
+A -fno-tree-loop-distribute-patterns
+A -g
+A -gnatwa
+A -gnatQ
+A -gnat12
+A -gnatw.X
+A -mfloat-abi=hard
+A -mfpu=fpv4-sp-d16
+A -mlibarch=armv7e-m+fp
+A -march=armv7e-m+fp
+P DB LC TF ZX
+
+RN
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_IMPLEMENTATION_ASPECT_SPECIFICATIONS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLEMENTATION_RESTRICTIONS
+RR NO_ELABORATION_CODE
+
+U nrf52833_svd.ficr%s	nrf52833_svd-ficr.ads	4fb6a2ef NE OO PR PK IU
+W nrf52833_svd%s	nrf52833_svd.ads	nrf52833_svd.ali
+W system%s		system.ads		system.ali
+
+D nrf52833_svd.ads	20260429062434 fc8c4789 nrf52833_svd%s
+D nrf52833_svd-ficr.ads	20260429062301 d347e596 nrf52833_svd.ficr%s
+D system.ads		20250828113340 9cf14779 system%s
+G a e
+G c Z s s [Tdeviceid_registersBIP nrf52833_svd__ficr 49 4 none]
+G c Z s s [Ter_registersBIP nrf52833_svd__ficr 54 4 none]
+G c Z s s [Tir_registersBIP nrf52833_svd__ficr 59 4 none]
+G c Z s s [deviceaddrtype_registerIP nrf52833_svd__ficr 73 9 none]
+G c Z s s [Tdeviceaddr_registersBIP nrf52833_svd__ficr 90 4 none]
+G c Z s s [ficr_info_clusterIP nrf52833_svd__ficr 97 9 none]
+G c Z s s [Tprodtest_registersBIP nrf52833_svd__ficr 122 4 none]
+G c Z s s [a_registerIP nrf52833_svd__ficr 131 9 none]
+G c Z s s [b_registerIP nrf52833_svd__ficr 148 9 none]
+G c Z s s [t_registerIP nrf52833_svd__ficr 165 9 none]
+G c Z s s [ficr_temp_clusterIP nrf52833_svd__ficr 180 9 none]
+G c Z s s [Ttagheader0_nfc_ud_field_arrayBIP nrf52833_svd__ficr 247 4 none]
+G c Z s s [tagheader0_nfc_ud_fieldIP nrf52833_svd__ficr 252 9 none]
+G c Z s s [tagheader0_nfc_registerIP nrf52833_svd__ficr 273 9 none]
+G c Z s s [Ttagheader1_nfc_ud_field_arrayBIP nrf52833_svd__ficr 292 4 none]
+G c Z s s [tagheader1_nfc_registerIP nrf52833_svd__ficr 298 9 none]
+G c Z s s [Ttagheader2_nfc_ud_field_arrayBIP nrf52833_svd__ficr 322 4 none]
+G c Z s s [tagheader2_nfc_registerIP nrf52833_svd__ficr 328 9 none]
+G c Z s s [Ttagheader3_nfc_ud_field_arrayBIP nrf52833_svd__ficr 352 4 none]
+G c Z s s [tagheader3_nfc_registerIP nrf52833_svd__ficr 358 9 none]
+G c Z s s [ficr_nfc_clusterIP nrf52833_svd__ficr 379 9 none]
+G c Z s s [ficr_peripheralIP nrf52833_svd__ficr 407 9 none]
+X 1 nrf52833_svd.ads
+6K9*NRF52833_SVD 180e17 2|36w6 39r9 49r49 54r43 59r43 77r24 90r51 99r27 101r27
+. 103r27 105r27 107r27 122r49 128r25 135r24 145r25 152r24 162r25 169r23 242r42
+. 244r41 258r19 289r41 304r19 319r41 334r19 349r41 364r19 409r32 411r32 451r5
+30M9*Byte 2|162r38 242r55 244r54 289r54 319r54 349r54
+42M9*UInt12 2|128r38
+48M9*UInt14 2|145r38
+60M9*UInt18 2|152r37
+66M9*UInt20 2|135r37
+78M9*UInt24 2|169r36 258r32
+99M9*UInt31 2|77r37
+102M9*UInt32 2|49r62 54r56 59r56 90r64 99r40 101r40 103r40 105r40 107r40
+. 122r62 304r32 334r32 364r32 409r45 411r45
+109m4*FICR_Base{3|90M9} 2|449r30
+X 2 nrf52833_svd-ficr.ads
+39K22*FICR 1|6k9 2|451l18 451e22
+49A9*DEVICEID_Registers(1|102M9)<integer> 413r32
+54A9*ER_Registers(1|102M9)<integer> 415r32
+59A9*IR_Registers(1|102M9)<integer> 417r32
+62E9*DEVICEADDRTYPE_DEVICEADDRTYPE_Field 67e6 68r8 75r24
+64n7*Public{62E9} 69r7
+66n7*Random{62E9} 70r7
+73R9*DEVICEADDRTYPE_Register 79e6 82r8 419r32
+75e7*DEVICEADDRTYPE{62E9} 83r7
+77m7*Reserved_1_31{1|99M9} 84r7
+90A9*DEVICEADDR_Registers(1|102M9)<integer> 421r32
+97R9*FICR_INFO_Cluster 109e6 111r8 423r32
+99m7*PART{1|102M9} 112r7
+101m7*VARIANT{1|102M9} 113r7
+103m7*PACKAGE_k{1|102M9} 114r7
+105m7*RAM{1|102M9} 115r7
+107m7*FLASH{1|102M9} 116r7
+122A9*PRODTEST_Registers(1|102M9)<integer> 425r32
+128M12*A_A_Field{1|42M9} 133r24
+131R9*A_Register 137e6 140r8 182r20 184r20 186r20 188r20 190r20 192r20
+133m7*A{128M12} 141r7
+135m7*Reserved_12_31{1|66M9} 142r7
+145M12*B_B_Field{1|48M9} 150r24
+148R9*B_Register 154e6 157r8 194r20 196r20 198r20 200r20 202r20 204r20
+150m7*B{145M12} 158r7
+152m7*Reserved_14_31{1|60M9} 159r7
+162M12*T_T_Field{1|30M9} 167r23
+165R9*T_Register 171e6 174r8 206r20 208r20 210r20 212r20 214r20
+167m7*T{162M12} 175r7
+169m7*Reserved_8_31{1|78M9} 176r7
+180R9*FICR_TEMP_Cluster 216e6 218r8 427r32
+182r7*A0{131R9} 219r7
+184r7*A1{131R9} 220r7
+186r7*A2{131R9} 221r7
+188r7*A3{131R9} 222r7
+190r7*A4{131R9} 223r7
+192r7*A5{131R9} 224r7
+194r7*B0{148R9} 225r7
+196r7*B1{148R9} 226r7
+198r7*B2{148R9} 227r7
+200r7*B3{148R9} 228r7
+202r7*B4{148R9} 229r7
+204r7*B5{148R9} 230r7
+206r7*T0{165R9} 231r7
+208r7*T1{165R9} 232r7
+210r7*T2{165R9} 233r7
+212r7*T3{165R9} 234r7
+214r7*T4{165R9} 235r7
+242M12*TAGHEADER0_NFC_MFGID_Field{1|30M9} 276r15
+244M12*TAGHEADER0_NFC_UD_Element{1|30M9} 248r9
+247A9*TAGHEADER0_NFC_UD_Field_Array(244M12)<integer> 261r19
+252R9*TAGHEADER0_NFC_UD_Field 253d7 264e6 266r8 278r15
+253b7*As_Array{boolean} 255r12
+258m13*Val{1|78M9} 267r7
+261a13*Arr{247A9} 268r7
+273R9*TAGHEADER0_NFC_Register 280e6 283r8 382r28
+276m7*MFGID{242M12} 284r7
+278r7*UD{252R9} 285r7
+289M12*TAGHEADER1_NFC_UD_Element{1|30M9} 293r9
+292A9*TAGHEADER1_NFC_UD_Field_Array(289M12)<integer> 307r19
+298R9*TAGHEADER1_NFC_Register 299d7 310e6 313r8 385r28
+299b7*As_Array{boolean} 301r12
+304m13*Val{1|102M9} 314r7
+307a13*Arr{292A9} 315r7
+319M12*TAGHEADER2_NFC_UD_Element{1|30M9} 323r9
+322A9*TAGHEADER2_NFC_UD_Field_Array(319M12)<integer> 337r19
+328R9*TAGHEADER2_NFC_Register 329d7 340e6 343r8 388r28
+329b7*As_Array{boolean} 331r12
+334m13*Val{1|102M9} 344r7
+337a13*Arr{322A9} 345r7
+349M12*TAGHEADER3_NFC_UD_Element{1|30M9} 353r9
+352A9*TAGHEADER3_NFC_UD_Field_Array(349M12)<integer> 367r19
+358R9*TAGHEADER3_NFC_Register 359d7 370e6 373r8 391r28
+359b7*As_Array{boolean} 361r12
+364m13*Val{1|102M9} 374r7
+367a13*Arr{352A9} 375r7
+379R9*FICR_NFC_Cluster 393e6 395r8 429r32
+382r7*TAGHEADER0{273R9} 396r7
+385r7*TAGHEADER1{298R9} 397r7
+388r7*TAGHEADER2{328R9} 398r7
+391r7*TAGHEADER3{358R9} 399r7
+407R9*FICR_Peripheral 431e6 433r8 448r26
+409m7*CODEPAGESIZE{1|102M9} 434r7
+411m7*CODESIZE{1|102M9} 435r7
+413a7*DEVICEID{49A9} 436r7
+415a7*ER{54A9} 437r7
+417a7*IR{59A9} 438r7
+419r7*DEVICEADDRTYPE{73R9} 439r7
+421a7*DEVICEADDR{90A9} 440r7
+423r7*INFO{97R9} 441r7
+425a7*PRODTEST{122A9} 442r7
+427r7*TEMP{180R9} 443r7
+429r7*NFC{379R9} 444r7
+448r4*FICR_Periph{407R9}
+X 3 system.ads
+60K9*System 2|37w6 80r24 138r24 155r24 172r24 281r24 311r24 341r24 371r24
+. 3|176e11
+90M9*Address
+114n41*Low_Order_First{114E9} 2|80r31 138r31 155r31 172r31 281r31 311r31
+. 341r31 371r31
+

@@ -1,0 +1,73 @@
+V "GNAT Lib v15"
+A -O2
+A -gnatA
+A --RTS=/home/user/.local/share/alire/toolchains/gnat_arm_elf_15.2.1_a5e9cfb1/arm-eabi/lib/gnat/light-tasking-nrf52833/
+A -mlittle-endian
+A -mthumb
+A -mfloat-abi=hard
+A -mfpu=fpv4-sp-d16
+A -mcpu=cortex-m4
+A -fno-tree-loop-distribute-patterns
+A -g
+A -gnatwa
+A -gnatQ
+A -gnat12
+A -gnatw.X
+A -mfloat-abi=hard
+A -mfpu=fpv4-sp-d16
+A -mlibarch=armv7e-m+fp
+A -march=armv7e-m+fp
+P DB LC TF ZX
+
+RN
+RV NO_IMPLEMENTATION_ASPECT_SPECIFICATIONS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLEMENTATION_RESTRICTIONS
+RV NO_IMPLICIT_LOOPS
+RR NO_ELABORATION_CODE
+
+U nrf52833_svd.acl%s	nrf52833_svd-acl.ads	0eba4ea2 NE OO PR PK IU
+W nrf52833_svd%s	nrf52833_svd.ads	nrf52833_svd.ali
+W system%s		system.ads		system.ali
+
+D nrf52833_svd.ads	20260429062434 fc8c4789 nrf52833_svd%s
+D nrf52833_svd-acl.ads	20260429062301 924b09db nrf52833_svd.acl%s
+D system.ads		20250828113340 9cf14779 system%s
+G a e
+G c Z s s [perm_acl_registerIP nrf52833_svd__acl 75 9 none]
+G c Z s s [acl_acl_clusterIP nrf52833_svd__acl 97 9 none]
+G c Z s s [Tacl_acl_clustersBIP nrf52833_svd__acl 117 4 none]
+G c Z s s [acl_peripheralIP nrf52833_svd__acl 124 9 none]
+X 1 nrf52833_svd.ads
+6K9*NRF52833_SVD 180e17 2|36w6 39r9 77r23 80r43 82r42 84r23 100r22 103r22
+. 138r5
+9M9*Bit 2|77r36
+93M9*UInt29 2|84r36
+102M9*UInt32 2|100r35 103r35
+163m4*ACL_Base{3|90M9} 2|136r30
+X 2 nrf52833_svd-acl.ads
+39K22*ACL 1|6k9 2|80r56 82r55 138l18 138e21
+52E9*PERM_WRITE_Field 57e6 58r8 80r23
+54n7*Enable{52E9} 59r7 80r60
+56n7*Disable{52E9} 60r7
+63E9*PERM_READ_Field 68e6 69r8 82r23
+65n7*Enable{63E9} 70r7 82r59
+67n7*Disable{63E9} 71r7
+75R9*PERM_ACL_Register 86e6 89r8 106r22
+77m7*Reserved_0_0{1|9M9} 90r7
+80e7*WRITE{52E9} 91r7
+82e7*READ{63E9} 92r7
+84m7*Reserved_3_31{1|93M9} 93r7
+97R9*ACL_ACL_Cluster 108e6 110r8 117r47
+100m7*ADDR{1|102M9} 111r7
+103m7*SIZE{1|102M9} 112r7
+106r7*PERM{75R9} 113r7
+117A9*ACL_ACL_Clusters(97R9)<integer> 126r21
+124R9*ACL_Peripheral 128e6 130r8 135r25
+126a7*ACL{117A9} 131r7
+135r4*ACL_Periph{124R9}
+X 3 system.ads
+60K9*System 2|37w6 87r24 3|176e11
+90M9*Address
+114n41*Low_Order_First{114E9} 2|87r31
+

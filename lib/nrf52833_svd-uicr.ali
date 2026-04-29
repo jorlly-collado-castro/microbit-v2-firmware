@@ -1,0 +1,123 @@
+V "GNAT Lib v15"
+A -O2
+A -gnatA
+A --RTS=/home/user/.local/share/alire/toolchains/gnat_arm_elf_15.2.1_a5e9cfb1/arm-eabi/lib/gnat/light-tasking-nrf52833/
+A -mlittle-endian
+A -mthumb
+A -mfloat-abi=hard
+A -mfpu=fpv4-sp-d16
+A -mcpu=cortex-m4
+A -fno-tree-loop-distribute-patterns
+A -g
+A -gnatwa
+A -gnatQ
+A -gnat12
+A -gnatw.X
+A -mfloat-abi=hard
+A -mfpu=fpv4-sp-d16
+A -mlibarch=armv7e-m+fp
+A -march=armv7e-m+fp
+P DB LC TF ZX
+
+RN
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_ASPECT_SPECIFICATIONS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLEMENTATION_RESTRICTIONS
+RV NO_IMPLICIT_LOOPS
+RR NO_ELABORATION_CODE
+
+U nrf52833_svd.uicr%s	nrf52833_svd-uicr.ads	fa2c3974 NE OO PR PK IU
+W nrf52833_svd%s	nrf52833_svd.ads	nrf52833_svd.ali
+W system%s		system.ads		system.ali
+
+D nrf52833_svd.ads	20260429062434 fc8c4789 nrf52833_svd%s
+D nrf52833_svd-uicr.ads	20260429062301 66dd7e0d nrf52833_svd.uicr%s
+D system.ads		20250828113340 9cf14779 system%s
+G a e
+G c Z s s [Tnrffw_registersBIP nrf52833_svd__uicr 49 4 none]
+G c Z s s [Tnrfhw_registersBIP nrf52833_svd__uicr 54 4 none]
+G c Z s s [Tcustomer_registersBIP nrf52833_svd__uicr 59 4 none]
+G c Z s s [pselreset_registerIP nrf52833_svd__uicr 77 9 none]
+G c Z s s [Tpselreset_registersBIP nrf52833_svd__uicr 100 4 none]
+G c Z s s [approtect_registerIP nrf52833_svd__uicr 114 9 none]
+G c Z s s [nfcpins_registerIP nrf52833_svd__uicr 140 9 none]
+G c Z s s [debugctrl_registerIP nrf52833_svd__uicr 177 9 none]
+G c Z s s [regout0_registerIP nrf52833_svd__uicr 222 9 none]
+G c Z s s [uicr_peripheralIP nrf52833_svd__uicr 241 9 none]
+X 1 nrf52833_svd.ads
+6K9*NRF52833_SVD 180e17 2|36w6 39r9 49r47 54r47 59r50 61r35 62r36 83r23 86r24
+. 116r47 118r23 142r48 144r23 179r52 181r52 183r24 224r45 226r23 278r5
+9M9*Bit 2|62r49
+21M9*UInt5 2|61r48
+54M9*UInt16 2|183r37
+78M9*UInt24 2|118r36
+81M9*UInt25 2|83r36
+93M9*UInt29 2|226r36
+99M9*UInt31 2|144r36
+102M9*UInt32 2|49r60 54r60 59r63
+110m4*UICR_Base{3|90M9} 2|276r30
+X 2 nrf52833_svd-uicr.ads
+39K22*UICR 1|6k9 2|86r37 116r60 142r61 179r65 181r65 224r58 278l18 278e22
+49A9*NRFFW_Registers(1|102M9)<integer> 243r27
+54A9*NRFHW_Registers(1|102M9)<integer> 245r27
+59A9*CUSTOMER_Registers(1|102M9)<integer> 247r27
+61M12*PSELRESET_PIN_Field{1|21M9} 79r23
+62M12*PSELRESET_PORT_Field{1|9M9} 81r23
+65E9*PSELRESET_CONNECT_Field 70e6 71r8 85r23
+67n7*Connected{65E9} 72r7
+69n7*Disconnected{65E9} 73r7 86r42
+77R9*PSELRESET_Register 88e6 91r8 100r50
+79m7*PIN{61M12} 92r7
+81m7*PORT{62M12} 93r7
+83m7*Reserved_6_30{1|81M9} 94r7
+85e7*CONNECT{65E9} 95r7
+100A9*PSELRESET_Registers(77R9)<integer> 250r27
+103E9*APPROTECT_PALL_Field 108e6 109r8 116r23
+105n7*Enabled{103E9} 110r7
+107n7*Disabled{103E9} 111r7 116r65
+114R9*APPROTECT_Register 120e6 123r8 252r27
+116e7*PALL{103E9} 124r7
+118m7*Reserved_8_31{1|78M9} 125r7
+129E9*NFCPINS_PROTECT_Field 134e6 135r8 142r23
+131n7*Disabled{129E9} 136r7
+133n7*NFC{129E9} 137r7 142r66
+140R9*NFCPINS_Register 146e6 149r8 254r27
+142e7*PROTECT{129E9} 150r7
+144m7*Reserved_1_31{1|99M9} 151r7
+155E9*DEBUGCTRL_CPUNIDEN_Field 160e6 161r8 179r24
+157n7*Disabled{155E9} 162r7
+159n7*Enabled{155E9} 163r7 179r70
+166E9*DEBUGCTRL_CPUFPBEN_Field 171e6 172r8 181r24
+168n7*Disabled{166E9} 173r7
+170n7*Enabled{166E9} 174r7 181r70
+177R9*DEBUGCTRL_Register 185e6 188r8 256r27
+179e7*CPUNIDEN{155E9} 189r7
+181e7*CPUFPBEN{166E9} 190r7
+183m7*Reserved_16_31{1|54M9} 191r7
+195E9*REGOUT0_VOUT_Field 210e6 211r8 224r23
+197n7*Val_1V8{195E9} 212r7
+199n7*Val_2V1{195E9} 213r7
+201n7*Val_2V4{195E9} 214r7
+203n7*Val_2V7{195E9} 215r7
+205n7*Val_3V0{195E9} 216r7
+207n7*Val_3V3{195E9} 217r7
+209n7*DEFAULT{195E9} 218r7 224r63
+222R9*REGOUT0_Register 228e6 231r8 259r27
+224e7*VOUT{195E9} 232r7
+226m7*Reserved_3_31{1|93M9} 233r7
+241R9*UICR_Peripheral 261e6 263r8 275r26
+243a7*NRFFW{49A9} 264r7
+245a7*NRFHW{54A9} 265r7
+247a7*CUSTOMER{59A9} 266r7
+250a7*PSELRESET{100A9} 267r7
+252r7*APPROTECT{114R9} 268r7
+254r7*NFCPINS{140R9} 269r7
+256r7*DEBUGCTRL{177R9} 270r7
+259r7*REGOUT0{222R9} 271r7
+275r4*UICR_Periph{241R9}
+X 3 system.ads
+60K9*System 2|37w6 89r24 121r24 147r24 186r24 229r24 3|176e11
+90M9*Address
+114n41*Low_Order_First{114E9} 2|89r31 121r31 147r31 186r31 229r31
+

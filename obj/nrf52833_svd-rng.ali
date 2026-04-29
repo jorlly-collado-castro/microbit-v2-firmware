@@ -1,0 +1,122 @@
+V "GNAT Lib v15"
+A -O2
+A -gnatA
+A --RTS=/home/user/.local/share/alire/toolchains/gnat_arm_elf_15.2.1_a5e9cfb1/arm-eabi/lib/gnat/light-tasking-nrf52833/
+A -mlittle-endian
+A -mthumb
+A -mfloat-abi=hard
+A -mfpu=fpv4-sp-d16
+A -mcpu=cortex-m4
+A -fno-tree-loop-distribute-patterns
+A -g
+A -gnatwa
+A -gnatQ
+A -gnat12
+A -gnatw.X
+A -mfloat-abi=hard
+A -mfpu=fpv4-sp-d16
+A -mlibarch=armv7e-m+fp
+A -march=armv7e-m+fp
+P DB LC TF ZX
+
+RN
+RV NO_IMPLEMENTATION_ASPECT_SPECIFICATIONS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLEMENTATION_RESTRICTIONS
+RR NO_ELABORATION_CODE
+
+U nrf52833_svd.rng%s	nrf52833_svd-rng.ads	6dce093e NE OO PR PK IU
+W nrf52833_svd%s	nrf52833_svd.ads	nrf52833_svd.ali
+W system%s		system.ads		system.ali
+
+D nrf52833_svd.ads	20260429062434 fc8c4789 nrf52833_svd%s
+D nrf52833_svd-rng.ads	20260429062301 f13f4e47 nrf52833_svd.rng%s
+D system.ads		20250828113340 9cf14779 system%s
+G a e
+G c Z s s [tasks_start_registerIP nrf52833_svd__rng 58 9 none]
+G c Z s s [tasks_stop_registerIP nrf52833_svd__rng 85 9 none]
+G c Z s s [events_valrdy_registerIP nrf52833_svd__rng 114 9 none]
+G c Z s s [shorts_registerIP nrf52833_svd__rng 142 9 none]
+G c Z s s [intenset_registerIP nrf52833_svd__rng 179 9 none]
+G c Z s s [intenclr_registerIP nrf52833_svd__rng 216 9 none]
+G c Z s s [config_registerIP nrf52833_svd__rng 242 9 none]
+G c Z s s [value_registerIP nrf52833_svd__rng 259 9 none]
+G c Z s s [rng_peripheralIP nrf52833_svd__rng 278 9 none]
+X 1 nrf52833_svd.ads
+6K9*NRF52833_SVD 180e17 2|36w6 39r9 63r23 90r23 118r24 120r23 144r51 146r23
+. 183r23 220r23 244r46 246r23 256r33 263r23 314r5
+30M9*Byte 2|256r46
+78M9*UInt24 2|263r36
+99M9*UInt31 2|63r36 90r36 120r36 146r36 183r36 220r36 246r36
+138m4*RNG_Base{3|90M9} 2|312r30
+X 2 nrf52833_svd-rng.ads
+39K22*RNG 1|6k9 2|118r37 144r64 244r59 314l18 314e21
+47E9*TASKS_START_TASKS_START_Field 52e6 53r8 60r23
+49n7*TASKS_START_TASKS_START_Field_Reset{47E9} 54r7 61r24
+51n7*Trigger{47E9} 55r7
+58R9*TASKS_START_Register 65e6 68r8 280r31
+60e7*TASKS_START{47E9} 69r7
+63m7*Reserved_1_31{1|99M9} 70r7
+74E9*TASKS_STOP_TASKS_STOP_Field 79e6 80r8 87r23
+76n7*TASKS_STOP_TASKS_STOP_Field_Reset{74E9} 81r7 88r24
+78n7*Trigger{74E9} 82r7
+85R9*TASKS_STOP_Register 92e6 95r8 282r31
+87e7*TASKS_STOP{74E9} 96r7
+90m7*Reserved_1_31{1|99M9} 97r7
+102E9*EVENTS_VALRDY_EVENTS_VALRDY_Field 107e6 108r8 117r23
+104n7*NotGenerated{102E9} 109r7 118r41
+106n7*Generated{102E9} 110r7
+114R9*EVENTS_VALRDY_Register 122e6 125r8 285r31
+117e7*EVENTS_VALRDY{102E9} 126r7
+120m7*Reserved_1_31{1|99M9} 127r7
+131E9*SHORTS_VALRDY_STOP_Field 136e6 137r8 144r23
+133n7*Disabled{131E9} 138r7 144r68
+135n7*Enabled{131E9} 139r7
+142R9*SHORTS_Register 148e6 151r8 287r31
+144e7*VALRDY_STOP{131E9} 152r7
+146m7*Reserved_1_31{1|99M9} 153r7
+157E9*INTENSET_VALRDY_Field 162e6 163r8
+159n7*Disabled{157E9} 164r7
+161n7*Enabled{157E9} 165r7
+168E9*INTENSET_VALRDY_Field_1 173e6 174r8 181r23
+170n7*INTENSET_VALRDY_Field_Reset{168E9} 175r7 181r50
+172n7*Set{168E9} 176r7
+179R9*INTENSET_Register 185e6 188r8 289r31
+181e7*VALRDY{168E9} 189r7
+183m7*Reserved_1_31{1|99M9} 190r7
+194E9*INTENCLR_VALRDY_Field 199e6 200r8
+196n7*Disabled{194E9} 201r7
+198n7*Enabled{194E9} 202r7
+205E9*INTENCLR_VALRDY_Field_1 210e6 211r8 218r23
+207n7*INTENCLR_VALRDY_Field_Reset{205E9} 212r7 218r50
+209n7*Clear{205E9} 213r7
+216R9*INTENCLR_Register 222e6 225r8 291r31
+218e7*VALRDY{205E9} 226r7
+220m7*Reserved_1_31{1|99M9} 227r7
+231E9*CONFIG_DERCEN_Field 236e6 237r8 244r23
+233n7*Disabled{231E9} 238r7 244r63
+235n7*Enabled{231E9} 239r7
+242R9*CONFIG_Register 248e6 251r8 293r31
+244e7*DERCEN{231E9} 252r7
+246m7*Reserved_1_31{1|99M9} 253r7
+256M12*VALUE_VALUE_Field{1|30M9} 261r23
+259R9*VALUE_Register 265e6 268r8 295r31
+261m7*VALUE{256M12} 269r7
+263m7*Reserved_8_31{1|78M9} 270r7
+278R9*RNG_Peripheral 297e6 299r8 311r25
+280r7*TASKS_START{58R9} 300r7
+282r7*TASKS_STOP{85R9} 301r7
+285r7*EVENTS_VALRDY{114R9} 302r7
+287r7*SHORTS{142R9} 303r7
+289r7*INTENSET{179R9} 304r7
+291r7*INTENCLR{216R9} 305r7
+293r7*CONFIG{242R9} 306r7
+295r7*VALUE{259R9} 307r7
+311r4*RNG_Periph{278R9}
+X 3 system.ads
+60K9*System 2|37w6 66r24 93r24 123r24 149r24 186r24 223r24 249r24 266r24
+. 3|176e11
+90M9*Address
+114n41*Low_Order_First{114E9} 2|66r31 93r31 123r31 149r31 186r31 223r31 249r31
+. 266r31
+

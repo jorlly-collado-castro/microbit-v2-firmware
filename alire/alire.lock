@@ -1,0 +1,115 @@
+# THIS FILE IS GENERATED. DO NOT EDIT.
+
+[solution]
+[solution.context]
+solved = true
+[[solution.state]]
+crate = "gnat_arm_elf"
+fulfilment = "solved"
+pinned = false
+transitivity = "indirect"
+versions = "^15"
+[solution.state.release]
+auto-gpr-with = false
+description = "The GNAT Ada compiler - ARM cross-compiler"
+licenses = "GPL-3.0-or-later AND GPL-3.0-or-later WITH GCC-exception-3.1"
+maintainers = [
+"chouteau@adacore.com",
+"sagaert@adacore.com",
+]
+maintainers-logins = [
+"Fabien-Chouteau",
+"AldanTanneo",
+]
+name = "gnat_arm_elf"
+provides = [
+"gnat=15.2.1",
+]
+version = "15.2.1"
+website = "https://github.com/alire-project/GNAT-FSF-builds"
+[solution.state.release.configuration]
+auto_gpr_with = true
+disabled = true
+generate_ada = true
+generate_c = true
+generate_gpr = true
+output_dir = "config"
+[solution.state.release.environment]
+[solution.state.release.environment.PATH]
+prepend = "${CRATE_ROOT}/bin"
+[solution.state.release.origin]
+binary = true
+hashes = [
+"sha256:a5e9cfb14ffa1ad48af2ed86b47a2e756925b2dd57aed55aba78d34431a45404",
+]
+url = "https://github.com/alire-project/GNAT-FSF-builds/releases/download/gnat-15.2.0-1/gnat-arm-elf-linux64-x86_64-15.2.0-1.tar.gz"
+[[solution.state]]
+crate = "light_tasking_nrf52833"
+fulfilment = "solved"
+pinned = false
+transitivity = "direct"
+versions = ">=15.3.0"
+[solution.state.release]
+authors = [
+"AdaCore",
+"Daniel King",
+]
+description = "light-tasking runtime for the NRF52833 SoC"
+licenses = "GPL-3.0-or-later WITH GCC-exception-3.1"
+long-description = "## Usage\n\nFirst edit your `alire.toml` file and add the following elements:\n - Add `light_tasking_nrf52833` in the dependency list:\n   ```toml\n   [[depends-on]]\n   light_tasking_nrf52833 = \"*\"\n   ```\n\nThen edit your project file to add the following elements:\n - \"with\" the run-time project file. With this, gprbuild will compile the run-time before your application\n   ```ada\n   with \"$(runtime_proj_prefix)_build.gpr\";\n   ```\n - Specify the `Target` and `Runtime` attributes:\n   ```ada\n      for Target use $(runtime_proj_prefix)_build'Target;\n      for Runtime (\"Ada\") use $(runtime_proj_prefix)_build'Runtime (\"Ada\");\n   ```\n"
+maintainers = [
+"Daniel King <damaki.gh@gmail.com>",
+]
+maintainers-logins = [
+"damaki",
+]
+name = "light_tasking_nrf52833"
+project-files = [
+"runtime_build.gpr",
+"ravenscar_build.gpr",
+]
+tags = [
+"embedded",
+"runtime",
+]
+version = "15.3.0"
+website = "https://github.com/damaki/community-bb-runtimes"
+[solution.state.release.configuration]
+auto_gpr_with = true
+disabled = false
+generate_ada = true
+generate_c = false
+generate_gpr = false
+output_dir = "gnat_user"
+[solution.state.release.configuration.variables]
+[solution.state.release.configuration.variables.LFCLK_Src]
+default = "Xtal"
+type = "Enum"
+values = [
+"Xtal",
+"RC",
+"Synth",
+]
+[solution.state.release.configuration.variables.Time_Base]
+default = "RTC2"
+type = "Enum"
+values = [
+"RTC0",
+"RTC1",
+"RTC2",
+]
+[solution.state.release.configuration.variables.Use_Reset_Pin]
+default = true
+type = "Boolean"
+[solution.state.release.configuration.variables.Use_SWO_Trace]
+default = true
+type = "Boolean"
+[solution.state.release.origin]
+hashes = [
+"sha256:8543d80e0ef3951f354024f25c827fe357d92b0d34b771f407d6691a0184f236",
+"sha512:a1e9095d3b7919b10c82d068c4752da336601b8f8f9794c276c3f6db3234e1ec3125df0447e67ef6cf8f1ed17395c97efabb6d52182631d55950048c64ee97db",
+]
+url = "https://github.com/damaki/community-bb-runtimes/releases/download/v15.3.0/light-tasking-nrf52833-15.3.0.tar.gz"
+[[solution.state.release.depends-on]]
+gnat_arm_elf = "^15"
+
