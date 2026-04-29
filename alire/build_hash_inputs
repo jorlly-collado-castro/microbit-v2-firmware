@@ -1,5 +1,0 @@
-dependency:light_tasking_nrf52833=15.3.0=bd2ce5d7b07b8c3acd83fec5286b8f917e020d63ea8125aaec12fb8953e52b7c
-external:LIBRARY_TYPE=default
-external:MICROBIT_V2_LIBRARY_TYPE=default
-profile:microbit_v2=DEVELOPMENT
-switches:microbit_v2=-Og,-fdata-sections,-ffunction-sections,-g,-gnatVa,-gnatW8,-gnatw.X,-gnatwa,-gnaty-d,-gnaty3,-gnatyA,-gnatyB,-gnatyI,-gnatyO,-gnatyS,-gnatya,-gnatyb,-gnatyc,-gnatye,-gnatyf,-gnatyh,-gnatyi,-gnatyk,-gnatyl,-gnatym,-gnatyn,-gnatyp,-gnatyr,-gnatyt,-gnatyu,-gnatyx

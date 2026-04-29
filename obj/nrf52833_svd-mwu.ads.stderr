@@ -1,3 +1,0 @@
-nrf52833_svd-mwu.ads:36:06: warning: unnecessary with of ancestor [-gnatwr]
-nrf52833_svd-mwu.ads:2795:19: warning: 64 bits of "MWU_REGION_Cluster" unused [enabled by default]
-nrf52833_svd-mwu.ads:2854:19: warning: 32 bits of "MWU_PREGION_Cluster" unused [enabled by default]

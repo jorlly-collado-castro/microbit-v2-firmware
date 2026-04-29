@@ -1,3 +1,0 @@
-nrf52833_svd-usbd.ads:36:06: warning: unnecessary with of ancestor [-gnatwr]
-nrf52833_svd-usbd.ads:2948:19: warning: 64 bits of "USBD_EPIN_Cluster" unused [enabled by default]
-nrf52833_svd-usbd.ads:3062:19: warning: 64 bits of "USBD_EPOUT_Cluster" unused [enabled by default]

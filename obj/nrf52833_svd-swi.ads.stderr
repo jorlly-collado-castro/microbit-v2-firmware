@@ -1,2 +1,0 @@
-nrf52833_svd-swi.ads:36:06: warning: unnecessary with of ancestor [-gnatwr]
-nrf52833_svd-swi.ads:37:06: warning: unit "System" is not referenced [-gnatwu]
