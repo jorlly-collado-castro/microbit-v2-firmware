@@ -1,5 +1,6 @@
 with Microbit.I2C;
 with Ada.Real_Time; use Ada.Real_Time;
+with Ada.Unchecked_Conversion;
 
 package body Microbit.Accelerometer is
 
@@ -11,6 +12,8 @@ package body Microbit.Accelerometer is
    
    --  I2C Address
    Address     : constant Unsigned_8 := Microbit.I2C.Default_Accel_Address;
+
+   function To_Int16 is new Ada.Unchecked_Conversion (Source => Unsigned_16, Target => Integer_16);
 
    procedure Initialize is
       Who_Am_I : aliased Unsigned_8 := 0;
@@ -43,14 +46,20 @@ package body Microbit.Accelerometer is
       --  Data buffer for X_L, X_H, Y_L, Y_H, Z_L, Z_H
       Buf : aliased array (1 .. 6) of Unsigned_8 := (others => 0);
       Result : Axis_Data;
+      UX, UY, UZ : Unsigned_16;
    begin
       --  Set MSB of register address to 1 to enable auto-increment for reading multiple bytes
       Microbit.I2C.Read_Register (Address, OUT_X_L_A or 16#80#, Buf'Address, 6);
 
-      --  Convert 8-bit registers to 16-bit integers
-      Result.X := Integer_16 (Buf (2)) * 256 + Integer_16 (Buf (1));
-      Result.Y := Integer_16 (Buf (4)) * 256 + Integer_16 (Buf (3));
-      Result.Z := Integer_16 (Buf (6)) * 256 + Integer_16 (Buf (5));
+      --  Combine high and low bytes into 16-bit unsigned integers safely
+      UX := Shift_Left (Unsigned_16 (Buf (2)), 8) or Unsigned_16 (Buf (1));
+      UY := Shift_Left (Unsigned_16 (Buf (4)), 8) or Unsigned_16 (Buf (3));
+      UZ := Shift_Left (Unsigned_16 (Buf (6)), 8) or Unsigned_16 (Buf (5));
+
+      --  Unchecked conversion to 16-bit signed integers (Two's complement)
+      Result.X := To_Int16 (UX);
+      Result.Y := To_Int16 (UY);
+      Result.Z := To_Int16 (UZ);
 
       return Result;
    end Read_Data;
