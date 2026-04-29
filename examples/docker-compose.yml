@@ -10,25 +10,12 @@ services:
       - alire_data:/root/.local/share/alire
     working_dir: /workspace/examples
     command: >
-      bash -c "
-      echo 'Building blinky example...' &&
-      cd blinky &&
-      alr --non-interactive build &&
-      echo 'Converting blinky ELF to HEX...' &&
-      arm-none-eabi-objcopy -O ihex bin/blinky bin/blinky.hex &&
-      cd .. &&
-      echo 'Building console example...' &&
-      cd console &&
-      alr --non-interactive build &&
-      echo 'Converting console ELF to HEX...' &&
-      arm-none-eabi-objcopy -O ihex bin/console bin/console.hex &&
-      cd .. &&
-      echo 'Building display example...' &&
-      cd display &&
-      alr --non-interactive build &&
-      echo 'Converting display ELF to HEX...' &&
-      arm-none-eabi-objcopy -O ihex bin/display bin/display.hex &&
-      echo 'Done! The hex files are available in their respective bin/ directories.'
+      sh -c "
+      echo 'Building blinky...' && cd /workspace/examples/blinky && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/blinky bin/blinky.hex &&
+      echo 'Building console...' && cd /workspace/examples/console && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/console bin/console.hex &&
+      echo 'Building display...' && cd /workspace/examples/display && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/display bin/display.hex &&
+      echo 'Building sensors...' && cd /workspace/examples/sensors && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/sensors bin/sensors.hex &&
+      echo 'All examples built successfully!'
       "
 
 volumes:

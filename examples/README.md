@@ -2,6 +2,13 @@
 
 This directory contains example applications demonstrating how to use the `microbit_v2` Ada HAL crate.
 
+## Available Examples
+
+*   **Blinky** (`examples/blinky/`): Blinks a single LED on the matrix.
+*   **Console** (`examples/console/`): Echoes UART characters in a loop using `Microbit.Console`.
+*   **Display** (`examples/display/`): Shows a moving pixel on the LED matrix using the background Ravenscar task.
+*   **Sensors** (`examples/sensors/`): Reads the LSM303AGR accelerometer via I2C and prints XYZ values to the console.
+
 ## 1. Building the Examples
 
 The examples can be built natively or securely using Docker. Using Docker is the recommended cross-platform method, as it completely eliminates the need to manually install Alire (the Ada package manager) and the ARM compiler toolchains on your host machine.

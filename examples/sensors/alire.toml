@@ -1,0 +1,14 @@
+name = "sensors"
+description = "Micro:bit v2 Accelerometer Example"
+version = "0.1.0"
+
+authors = ["Jorlly Collado <jorlly@collado.ch>"]
+maintainers = ["Jorlly Collado <jorlly@collado.ch>"]
+maintainers-logins = ["jorlly-collado-castro"]
+licenses = "GPL-3.0-only"
+
+[[depends-on]]
+microbit_v2 = "*"
+
+[[pins]]
+microbit_v2 = { path='../..' }
