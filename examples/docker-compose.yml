@@ -22,6 +22,12 @@ services:
       alr --non-interactive build &&
       echo 'Converting console ELF to HEX...' &&
       arm-none-eabi-objcopy -O ihex bin/console bin/console.hex &&
+      cd .. &&
+      echo 'Building display example...' &&
+      cd display &&
+      alr --non-interactive build &&
+      echo 'Converting display ELF to HEX...' &&
+      arm-none-eabi-objcopy -O ihex bin/display bin/display.hex &&
       echo 'Done! The hex files are available in their respective bin/ directories.'
       "
 
