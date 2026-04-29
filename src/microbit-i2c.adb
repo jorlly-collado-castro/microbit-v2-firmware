@@ -1,4 +1,5 @@
 with NRF52833_SVD.TWIM; use NRF52833_SVD.TWIM;
+with NRF52833_SVD.GPIO;
 with NRF52833_SVD;     use NRF52833_SVD;
 with Microbit.Pins;
 with System.Storage_Elements;
@@ -14,6 +15,10 @@ package body Microbit.I2C is
       --  though TWIM will take over their function.
       Microbit.Pins.Configure (SCL_Pin, Mode => Microbit.Pins.Input, Pull => Microbit.Pins.Pull_Up);
       Microbit.Pins.Configure (SDA_Pin, Mode => Microbit.Pins.Input, Pull => Microbit.Pins.Pull_Up);
+
+      --  Configure Open-Drain (S0D1) for SCL and SDA as recommended by Nordic
+      NRF52833_SVD.GPIO.P0_Periph.PIN_CNF (Integer (SCL_Pin.Pin)).DRIVE := NRF52833_SVD.GPIO.S0D1;
+      NRF52833_SVD.GPIO.P0_Periph.PIN_CNF (Integer (SDA_Pin.Pin)).DRIVE := NRF52833_SVD.GPIO.S0D1;
 
       --  Disable TWIM0 before configuration
       TWIM0_Periph.ENABLE.ENABLE := Disabled;
@@ -69,6 +74,23 @@ package body Microbit.I2C is
       loop
          null;
       end loop;
+
+      if TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = Generated then
+         --  Issue STOP task to gracefully exit the error state
+         TWIM0_Periph.TASKS_STOP.TASKS_STOP := Trigger;
+         while TWIM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED = NotGenerated loop
+            null;
+         end loop;
+
+         --  Clear Error Source by writing 1s to the set bits
+         --  Since we don't have a read-modify-write without resetting,
+         --  we just write 1 to all error flags.
+         TWIM0_Periph.ERRORSRC :=
+           (OVERRUN       => Received,
+            ANACK         => Received,
+            DNACK         => Received,
+            Reserved_3_31 => 0);
+      end if;
    end Write;
 
    procedure Read
@@ -100,6 +122,23 @@ package body Microbit.I2C is
       loop
          null;
       end loop;
+
+      if TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = Generated then
+         --  Issue STOP task to gracefully exit the error state
+         TWIM0_Periph.TASKS_STOP.TASKS_STOP := Trigger;
+         while TWIM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED = NotGenerated loop
+            null;
+         end loop;
+
+         --  Clear Error Source by writing 1s to the set bits
+         --  Since we don't have a read-modify-write without resetting,
+         --  we just write 1 to all error flags.
+         TWIM0_Periph.ERRORSRC :=
+           (OVERRUN       => Received,
+            ANACK         => Received,
+            DNACK         => Received,
+            Reserved_3_31 => 0);
+      end if;
    end Read;
 
    procedure Write_Register
@@ -119,38 +158,13 @@ package body Microbit.I2C is
       Data    : System.Address;
       Length  : Natural)
    is
-      use System.Storage_Elements;
-      --  We write the register address, then do a repeated start to read
       Reg_Buf : aliased Unsigned_8 := Reg with Volatile;
    begin
-      TWIM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED := NotGenerated;
-      TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR := NotGenerated;
+      --  Write the register address (with STOP)
+      Write (Address, Reg_Buf'Address, 1);
 
-      TWIM0_Periph.ADDRESS.ADDRESS := ADDRESS_ADDRESS_Field (Address mod 128);
-
-      --  Setup TXD (1 byte: Register address)
-      TWIM0_Periph.TXD.PTR := UInt32 (To_Integer (Reg_Buf'Address));
-      TWIM0_Periph.TXD.MAXCNT.MAXCNT := 1;
-
-      --  Setup RXD (Length bytes: Data)
-      TWIM0_Periph.RXD.PTR := UInt32 (To_Integer (Data));
-      TWIM0_Periph.RXD.MAXCNT.MAXCNT := MAXCNT_RXD_MAXCNT_Field (Length);
-
-      --  Shortcuts: LASTTX -> STARTRX (Repeated Start) and LASTRX -> STOP
-      TWIM0_Periph.SHORTS :=
-        (LASTTX_STARTRX => Enabled,
-         LASTRX_STOP    => Enabled,
-         Others         => <>);
-
-      --  Trigger TX (which will auto-trigger RX via shortcut)
-      TWIM0_Periph.TASKS_STARTTX.TASKS_STARTTX := Trigger;
-
-      --  Wait for STOPPED or ERROR
-      while TWIM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED = NotGenerated and then
-            TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = NotGenerated
-      loop
-         null;
-      end loop;
+      --  Read the data (with START)
+      Read (Address, Data, Length);
    end Read_Register;
 
 end Microbit.I2C;

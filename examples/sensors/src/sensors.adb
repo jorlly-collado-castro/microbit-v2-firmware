@@ -19,6 +19,7 @@ begin
    Microbit.Console.Put_Line ("Accelerometer Initialized");
 
    loop
+      Microbit.Console.Put_Line ("Reading accelerometer...");
       --  Read accelerometer
       Accel_Data := Microbit.Accelerometer.Read_Data;
 
