@@ -52,26 +52,41 @@ begin
          Microbit.Console.Put_Line ("Recording...");
          Microbit.Display.Show (Mic_Icon);
 
-         --  Record ~2 seconds of audio directly into RAM
+         --  Record ~3 seconds of audio directly into RAM
          Microbit.Microphone.Record_Sync
            (Parrot_Data.Buffer'Address, Parrot_Data.Buffer'Length);
 
          Microbit.Console.Put_Line ("Recording finished. Formatting...");
          Microbit.Display.Show (Play_Icon);
+         
+         --  Debug: print first 5 raw SAADC values
+         for I in Parrot_Data.Buffer'First .. Parrot_Data.Buffer'First + 4 loop
+            Microbit.Console.Put ("Raw: ");
+            Microbit.Console.Put_Line (Parrot_Data.Buffer (I)'Image);
+         end loop;
+
+         --  Remove SAADC DC Offset and apply gain
+         Microbit.Audio.Format_SAADC_To_PCM (Parrot_Data.Buffer);
+         
+         --  Debug: print first 5 PCM values
+         for I in Parrot_Data.Buffer'First .. Parrot_Data.Buffer'First + 4 loop
+            Microbit.Console.Put ("PCM: ");
+            Microbit.Console.Put_Line (Parrot_Data.Buffer (I)'Image);
+         end loop;
 
          --  In-place format signed PCM to unsigned PWM
-         --  Countertop = 16MHz / (16125 * 4) = 248
-         Microbit.Audio.Format_PCM_For_PWM (Parrot_Data.Buffer, 248);
+         --  Countertop = 16MHz / (11004 * 4) = 363
+         Microbit.Audio.Format_PCM_For_PWM (Parrot_Data.Buffer, 363);
 
          Microbit.Console.Put_Line ("Playing PCM...");
          --  Play the audio back out through the speaker
-         --  Using 16125 Hz: 1032kHz / 64 = 16.125 kHz
+         --  Using SAADC sample rate: 11004 Hz
          Microbit.PWM.Play_PCM
-           (Parrot_Data.Buffer'Address, Parrot_Data.Buffer'Length, 16125);
+           (Parrot_Data.Buffer'Address, Parrot_Data.Buffer'Length, 11004);
 
-         --  Wait a bit before returning to idle
+         --  Wait for playback to finish
          Now := Clock;
-         delay until Now + Milliseconds (2500);
+         delay until Now + Milliseconds (3100);
 
          Microbit.Console.Put_Line ("System Ready.");
          Microbit.Display.Show (Idle_Icon);
