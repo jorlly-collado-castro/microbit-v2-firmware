@@ -44,7 +44,7 @@ begin
          Microbit.Console.Put_Line ("Button A Pressed. Playing PCM.");
          Microbit.Display.Show (Note_Icon);
          Microbit.PWM.Play_PCM
-           (Microbit.PWM.Audio_Buffer (Wav_Data.Audio_Data),
+           (Wav_Data.Audio_Data,
             11025);
          delay until Now + Milliseconds (500);
          Microbit.Console.Put_Line ("PCM triggered.");

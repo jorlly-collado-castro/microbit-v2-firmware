@@ -1,0 +1,14 @@
+name = "parrot"
+description = "Micro:bit v2 Parrot Example"
+version = "0.1.0"
+authors = ["Jorlly Collado <jorlly@collado.ch>"]
+maintainers = ["Jorlly Collado <jorlly@collado.ch>"]
+licenses = "GPL-3.0-only"
+
+executables = ["parrot"]
+
+[[depends-on]]
+microbit_v2 = "*"
+
+[[pins]]
+microbit_v2 = { path='../..' }
