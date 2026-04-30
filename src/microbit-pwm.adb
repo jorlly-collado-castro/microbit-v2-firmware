@@ -3,7 +3,6 @@ with NRF52833_SVD.PWM;  use NRF52833_SVD.PWM;
 with NRF52833_SVD;      use NRF52833_SVD;
 with Microbit.Pins;
 with System.Storage_Elements;
-with Ada.Unchecked_Conversion;
 
 package body Microbit.PWM is
 
@@ -11,11 +10,28 @@ package body Microbit.PWM is
    
    Seq_Data : aliased UInt16 := 0;
 
-   function To_CNT is new Ada.Unchecked_Conversion (Source => UInt15, Target => CNT_CNT_Field);
+   --  Helper to bypass SVD enumeration bug for SEQ.CNT
+   procedure Set_SEQ_CNT (Seq_Idx : Natural; Value : UInt32) is
+      CNT_Reg : UInt32 with Import, Volatile, Address => PWM0_Periph.SEQ (Seq_Idx).CNT'Address;
+   begin
+      CNT_Reg := Value;
+   end Set_SEQ_CNT;
+
+   --  Helper to bypass SVD enumeration bug for SEQ.REFRESH
+   procedure Set_SEQ_REFRESH (Seq_Idx : Natural; Value : UInt32) is
+      REFRESH_Reg : UInt32 with Import, Volatile, Address => PWM0_Periph.SEQ (Seq_Idx).REFRESH'Address;
+   begin
+      REFRESH_Reg := Value;
+   end Set_SEQ_REFRESH;
 
    procedure Initialize is
       use System.Storage_Elements;
+      Run_Mic_Pin : constant Microbit.Pins.Pin_Id := (Microbit.Pins.Port_0, 20);
    begin
+      --  Enable the on-board amplifier/microphone regulator
+      Microbit.Pins.Configure (Run_Mic_Pin, Mode => Microbit.Pins.Output, Pull => Microbit.Pins.Disabled);
+      Microbit.Pins.Set (Run_Mic_Pin);
+
       Microbit.Pins.Configure (Speaker_Pin, Mode => Microbit.Pins.Output, Pull => Microbit.Pins.Disabled);
 
       PWM0_Periph.PSEL.OUT_k (0).PIN     := OUT_PSEL_PIN_Field (Speaker_Pin.Pin);
@@ -38,10 +54,11 @@ package body Microbit.PWM is
          Reserved_9_31 => 0);
 
       PWM0_Periph.SEQ (0).PTR := UInt32 (To_Integer (Seq_Data'Address));
-      PWM0_Periph.SEQ (0).CNT.CNT := To_CNT (1);
+      Set_SEQ_CNT (0, 1);
       PWM0_Periph.SEQ (0).REFRESH.CNT := Continuous;
       PWM0_Periph.SEQ (0).ENDDELAY.CNT := 0;
    end Initialize;
+
    
    procedure Set_Tone (Frequency : Float; Duty_Cycle : Float := 0.5) is
       Clock_Freq : constant Float := 16_000_000.0;
@@ -49,10 +66,11 @@ package body Microbit.PWM is
       Duty       : Float;
    begin
       if Frequency = 0.0 or Duty_Cycle = 0.0 then
-         Seq_Data := 16#8000#; 
-         PWM0_Periph.TASKS_SEQSTART (0).TASKS_SEQSTART := Trigger;
+         Stop;
          return;
       end if;
+      
+      PWM0_Periph.ENABLE.ENABLE := Enabled;
       
       Countertop := Clock_Freq / Frequency;
       if Countertop > 32767.0 then
@@ -64,12 +82,71 @@ package body Microbit.PWM is
       Duty := Countertop * Duty_Cycle;
       Seq_Data := UInt16 (Duty);
       
+      --  For continuous tone, do not stop at sequence end
+      PWM0_Periph.SHORTS.SEQEND0_STOP := Disabled;
+      
       PWM0_Periph.TASKS_SEQSTART (0).TASKS_SEQSTART := Trigger;
    end Set_Tone;
 
+   procedure Play_PCM (Data : Audio_Buffer; Sample_Rate : Positive) is
+      use System.Storage_Elements;
+      Clock_Freq : constant Float := 16_000_000.0;
+      Multiplier : constant Positive := 4; --  Multiply sample rate to get carrier frequency
+      Countertop : Float;
+   begin
+      if Data'Length = 0 then
+         return;
+      end if;
+      
+      PWM0_Periph.ENABLE.ENABLE := Enabled;
+
+      --  Configure base frequency (carrier frequency = Sample_Rate * Multiplier)
+      --  e.g. 11025 * 4 = 44100 Hz carrier (inaudible to human ear)
+      Countertop := Clock_Freq / Float (Sample_Rate * Multiplier);
+      if Countertop > 32767.0 then
+         Countertop := 32767.0;
+      end if;
+      
+      PWM0_Periph.COUNTERTOP.COUNTERTOP := COUNTERTOP_COUNTERTOP_Field (Countertop);
+
+      PWM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED := NotGenerated;
+      PWM0_Periph.TASKS_STOP.TASKS_STOP := Trigger;
+      --  Give the peripheral a tiny bit of time to stop before starting a new sequence
+      for I in 1 .. 1000 loop
+         if PWM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED = Generated then
+            exit;
+         end if;
+      end loop;
+      PWM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED := NotGenerated;
+
+      --  Set up EasyDMA for continuous PCM playback from flash
+      PWM0_Periph.SEQ (0).PTR := UInt32 (To_Integer (Data'Address));
+      Set_SEQ_CNT (0, UInt32 (Data'Length));
+      
+      --  Keep each sample active for 'Multiplier' PWM cycles
+      Set_SEQ_REFRESH (0, UInt32 (Multiplier - 1));
+      
+      PWM0_Periph.SEQ (0).ENDDELAY.CNT := 0;
+
+      --  Automatically stop PWM hardware as soon as the array finishes playing
+      PWM0_Periph.SHORTS.SEQEND0_STOP := Enabled;
+
+      PWM0_Periph.TASKS_SEQSTART (0).TASKS_SEQSTART := Trigger;
+   end Play_PCM;
+
    procedure Stop is
    begin
+      PWM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED := NotGenerated;
       PWM0_Periph.TASKS_STOP.TASKS_STOP := Trigger;
+      for I in 1 .. 1000 loop
+         if PWM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED = Generated then
+            exit;
+         end if;
+      end loop;
+      PWM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED := NotGenerated;
+      
+      --  Disable PWM completely to hand pins back to GPIO for absolute silence
+      PWM0_Periph.ENABLE.ENABLE := Disabled;
    end Stop;
 
 end Microbit.PWM;
