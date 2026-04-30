@@ -14,6 +14,7 @@ This directory contains example applications demonstrating how to use the `micro
 *   **Parrot** (`examples/parrot/`): Records audio via the analog microphone (SAADC) into a buffer and plays it back when the 'A' button is pressed.
 *   **Sound_Meter** (`examples/sound_meter/`): Displays real-time audio volume (SPL) as a bar graph on the LED matrix using Ravenscar multitasking.
 *   **Logo_Touch** (`examples/logo_touch/`): Interactive LED animation that responds to touching the capacitive logo pad, demonstrating GPIOTE and PPI interaction.
+*   **Temperature** (`examples/temperature/`): Reads the nRF52833's internal die temperature sensor and prints it to the serial console.
 
 ## 1. Building the Examples
 
