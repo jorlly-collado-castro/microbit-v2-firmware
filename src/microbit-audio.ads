@@ -17,6 +17,7 @@ package Microbit.Audio is
    --  Calculates the Sound Pressure Level (SPL) from a raw 12-bit SAADC buffer.
    --  Returns the sound level in an approximate 8-bit scale (0.0 to 255.0).
    --  Requires a sufficiently large buffer (e.g. 1000+ samples) for an accurate RMS calculation.
-   function Calculate_Sound_Level (Buffer : Audio_Buffer) return Float;
+   function Calculate_Sound_Level (Buffer : Audio_Buffer) return Float
+     with Post => Calculate_Sound_Level'Result >= 0.0 and Calculate_Sound_Level'Result <= 255.0;
 
 end Microbit.Audio;

@@ -15,12 +15,14 @@ package Microbit.I2C is
    --  Write data to an I2C device
    procedure Write
      (Address : Unsigned_8;
-      Data    : Data_Buffer);
+      Data    : Data_Buffer)
+     with Pre => Data'Length <= 65535;
 
    --  Read data from an I2C device
    procedure Read
      (Address : Unsigned_8;
-      Data    : out Data_Buffer);
+      Data    : out Data_Buffer)
+     with Pre => Data'Length <= 65535;
 
    --  Write to a specific register (common I2C sequence: write reg addr, then read/write)
    --  This effectively performs a Write(Address, [Reg, Val])
@@ -34,7 +36,8 @@ package Microbit.I2C is
    procedure Read_Register
      (Address : Unsigned_8;
       Reg     : Unsigned_8;
-      Data    : out Data_Buffer);
+      Data    : out Data_Buffer)
+     with Pre => Data'Length <= 65535;
 
    function Check_Error return Boolean;
 

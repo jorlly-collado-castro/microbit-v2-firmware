@@ -21,7 +21,8 @@ package body Microbit.Display is
    protected Display_State is
       procedure Show (Image : Matrix);
       procedure Clear;
-      procedure Set_Pixel (X, Y : Integer; State : Boolean);
+      procedure Set_Pixel (X, Y : Integer; State : Boolean)
+        with Pre => X in 0 .. 4 and Y in 0 .. 4;
       function Get return Matrix;
       procedure Start;
       entry Wait_To_Start;

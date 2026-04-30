@@ -13,7 +13,8 @@ package Microbit.Display is
    procedure Clear;
 
    --  Set a specific pixel. X is column (0..4), Y is row (0..4)
-   procedure Set_Pixel (X, Y : Integer; State : Boolean);
+   procedure Set_Pixel (X, Y : Integer; State : Boolean)
+     with Pre => X in 0 .. 4 and Y in 0 .. 4;
 
    --  Pre-defined images
    Heart : constant Matrix :=
