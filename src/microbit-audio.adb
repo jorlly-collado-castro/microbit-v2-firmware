@@ -3,7 +3,7 @@ with Interfaces; use Interfaces;
 
 package body Microbit.Audio is
 
-   procedure Format_PCM_For_PWM (Buffer : in out Audio_Buffer) is
+   procedure Format_PCM_For_PWM (Buffer : in out Audio_Buffer; Max_Amplitude : Natural := 363) is
       Val : Integer_32;
       Amp : Integer_32;
    begin
@@ -14,9 +14,9 @@ package body Microbit.Audio is
          --  1. Shift signed range (-32768..32767) to unsigned (0..65535)
          Val := Val + 32_768;
          
-         --  2. Scale to PWM countertop range (0..363)
-         --     Multiplier: 363, Divisor: 65535
-         Amp := (Val * 363) / 65_535;
+         --  2. Scale to PWM countertop range
+         --     Multiplier: Max_Amplitude, Divisor: 65535
+         Amp := (Val * Integer_32 (Max_Amplitude)) / 65_535;
          
          --  3. Apply polarity bit (Bit 15 = 1 => 0x8000)
          --     In two's complement 16-bit, an unsigned value of (0x8000 + Amp)

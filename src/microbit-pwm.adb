@@ -88,13 +88,13 @@ package body Microbit.PWM is
       PWM0_Periph.TASKS_SEQSTART (0).TASKS_SEQSTART := Trigger;
    end Set_Tone;
 
-   procedure Play_PCM (Data : Microbit.Audio.Audio_Buffer; Sample_Rate : Positive) is
+   procedure Play_PCM (Buffer_Address : System.Address; Length : Natural; Sample_Rate : Positive) is
       use System.Storage_Elements;
       Clock_Freq : constant Float := 16_000_000.0;
       Multiplier : constant Positive := 4; --  Multiply sample rate to get carrier frequency
       Countertop : Float;
    begin
-      if Data'Length = 0 then
+      if Length = 0 then
          return;
       end if;
       
@@ -119,9 +119,9 @@ package body Microbit.PWM is
       end loop;
       PWM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED := NotGenerated;
 
-      --  Set up EasyDMA for continuous PCM playback from flash
-      PWM0_Periph.SEQ (0).PTR := UInt32 (To_Integer (Data'Address));
-      Set_SEQ_CNT (0, UInt32 (Data'Length));
+      --  Set up EasyDMA for continuous PCM playback from flash or RAM
+      PWM0_Periph.SEQ (0).PTR := UInt32 (To_Integer (Buffer_Address));
+      Set_SEQ_CNT (0, UInt32 (Length));
       
       --  Keep each sample active for 'Multiplier' PWM cycles
       Set_SEQ_REFRESH (0, UInt32 (Multiplier - 1));

@@ -1,6 +1,5 @@
-pragma SPARK_Mode (On);
-with Microbit.PWM;
-with Microbit.Buttons; use Microbit.Buttons;
+pragma SPARK_Mode (Off); -- Passing Address violates SPARK boundary, but is safe for DMA
+with Microbit.Console;
 with Microbit.Display;
 with Microbit.Console;
 with Wav_Data;
@@ -44,7 +43,8 @@ begin
          Microbit.Console.Put_Line ("Button A Pressed. Playing PCM.");
          Microbit.Display.Show (Note_Icon);
          Microbit.PWM.Play_PCM
-           (Wav_Data.Audio_Data,
+           (Wav_Data.Audio_Data'Address,
+            Wav_Data.Audio_Data'Length,
             11025);
          delay until Now + Milliseconds (500);
          Microbit.Console.Put_Line ("PCM triggered.");

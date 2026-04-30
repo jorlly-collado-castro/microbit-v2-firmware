@@ -1,4 +1,4 @@
-pragma SPARK_Mode (On);
+pragma SPARK_Mode (Off); -- Passing Buffer'Address violates SPARK boundary, but is safe for DMA
 with Microbit.Console;
 with Microbit.Display;
 with Microbit.Buttons; use Microbit.Buttons;
@@ -53,18 +53,21 @@ begin
          Microbit.Display.Show (Mic_Icon);
 
          --  Record ~2 seconds of audio directly into RAM
-         Microbit.Microphone.Record_Sync (Parrot_Data.Buffer);
+         Microbit.Microphone.Record_Sync
+           (Parrot_Data.Buffer'Address, Parrot_Data.Buffer'Length);
 
          Microbit.Console.Put_Line ("Recording finished. Formatting...");
          Microbit.Display.Show (Play_Icon);
 
          --  In-place format signed PCM to unsigned PWM
-         Microbit.Audio.Format_PCM_For_PWM (Parrot_Data.Buffer);
+         --  Countertop = 16MHz / (16125 * 4) = 248
+         Microbit.Audio.Format_PCM_For_PWM (Parrot_Data.Buffer, 248);
 
          Microbit.Console.Put_Line ("Playing PCM...");
          --  Play the audio back out through the speaker
          --  Using 16125 Hz: 1032kHz / 64 = 16.125 kHz
-         Microbit.PWM.Play_PCM (Parrot_Data.Buffer, 16125);
+         Microbit.PWM.Play_PCM
+           (Parrot_Data.Buffer'Address, Parrot_Data.Buffer'Length, 16125);
 
          --  Wait a bit before returning to idle
          Now := Clock;

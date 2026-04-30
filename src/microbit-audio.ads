@@ -9,6 +9,7 @@ package Microbit.Audio is
    --  Formats a signed PCM audio buffer in-place to be played by the PWM peripheral.
    --  This scales the amplitude to fit the PWM countertop, shifts the baseline,
    --  and applies the necessary polarity bit (0x8000).
-   procedure Format_PCM_For_PWM (Buffer : in out Audio_Buffer);
+   procedure Format_PCM_For_PWM (Buffer : in out Audio_Buffer; Max_Amplitude : Natural := 363)
+     with Pre => Max_Amplitude <= 32767;
 
 end Microbit.Audio;

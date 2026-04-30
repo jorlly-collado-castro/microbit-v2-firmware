@@ -33,16 +33,23 @@ package body Microbit.Microphone is
       PDM_Periph.MODE.OPERATION := Mono;
       PDM_Periph.MODE.EDGE      := LeftFalling;
 
+      --  Default PDM clock frequency (1.032 MHz)
+      PDM_Periph.PDMCLKCTRL := 16#0840_0000#;
+      
+      --  Maximize microphone gain (+20 dB) to ensure audible recordings
+      PDM_Periph.GAINL.GAINL := MaxGain;
+      PDM_Periph.GAINR.GAINR := MaxGain;
+
       --  Enable PDM
       PDM_Periph.ENABLE.ENABLE := Enabled;
    end Initialize;
 
-   procedure Record_Sync (Data : out Microbit.Audio.Audio_Buffer) is
+   procedure Record_Sync (Buffer_Address : System.Address; Length : Natural) is
       use System.Storage_Elements;
    begin
-      --  Set up EasyDMA to point to the Data array
-      PDM_Periph.SAMPLE.PTR := UInt32 (To_Integer (Data'Address));
-      PDM_Periph.SAMPLE.MAXCNT.BUFFSIZE := UInt15 (Data'Length);
+      --  Set up EasyDMA to point to the raw memory address
+      PDM_Periph.SAMPLE.PTR := UInt32 (To_Integer (Buffer_Address));
+      PDM_Periph.SAMPLE.MAXCNT.BUFFSIZE := UInt15 (Length);
 
       PDM_Periph.EVENTS_STARTED.EVENTS_STARTED := NotGenerated;
       PDM_Periph.EVENTS_END.EVENTS_END := NotGenerated;
