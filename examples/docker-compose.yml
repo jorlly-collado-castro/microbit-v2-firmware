@@ -11,6 +11,7 @@ services:
     working_dir: /workspace/examples
     command: >
       sh -c "
+      echo 'Updating Alire index...' && alr index --update-all &&
       echo 'Building blinky...' && cd /workspace/examples/blinky && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/blinky bin/blinky.hex &&
       echo 'Building console...' && cd /workspace/examples/console && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/console bin/console.hex &&
       echo 'Building display...' && cd /workspace/examples/display && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/display bin/display.hex &&

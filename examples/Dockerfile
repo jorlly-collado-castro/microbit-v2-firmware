@@ -7,7 +7,7 @@ RUN apt-get update && \
 
 WORKDIR /tmp
 # Install Alire (Ada Package Manager)
-RUN curl -fSL https://github.com/alire-project/alire/releases/download/v2.0.1/alr-2.0.1-bin-x86_64-linux.zip -o alr.zip && \
+RUN curl -fSL https://github.com/alire-project/alire/releases/download/v2.1.0/alr-2.1.0-bin-x86_64-linux.zip -o alr.zip && \
     unzip alr.zip && \
     mv bin/alr /usr/local/bin/ && \
     rm -rf alr.zip bin/ LICENSE.txt
