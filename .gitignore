@@ -15,3 +15,4 @@ examples/**/bin/
 examples/**/config/
 examples/**/obj/
 scripts/
+docs/reference_implementations/

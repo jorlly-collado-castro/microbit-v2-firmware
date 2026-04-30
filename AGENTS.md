@@ -33,3 +33,9 @@ Agents modifying low-level hardware functionality **must** reference `/docs/HAL_
 *   **Mandatory Examples**: Whenever an agent implements a new feature or HAL driver (e.g., I2C, Display, Sensors), it **MUST** create a standalone example application in the `examples/` directory demonstrating its usage.
 *   **Docker Integration**: Agents **MUST** integrate every new example into the `examples/docker-compose.yml` build script. The Docker setup automatically runs `alr --non-interactive build` and generates the flashable `.hex` files (via `arm-none-eabi-objcopy`) for all examples.
 *   **Containerized Workflow**: Agents and users should utilize the containerized setup (`docker compose up` or `podman-compose up` inside the `examples/` directory) for building examples. This ensures cross-platform compatibility, avoids host toolchain pollution, and provides fast, reproducible builds via a cached Alire environment.
+
+## Reference Implementations & External Sources
+
+*   **Local First**: When an agent gets stuck, needs to understand hardware behavior, or requires implementation details, it **MUST** consult the local reference repositories stored in `docs/reference_implementations/` (e.g., `codal-core`, `codal-nrf52`, `microbit-v2-hardware`) using search tools like `grep`, `find`, or the bash shell. 
+*   **Avoid Redundant Fetching**: Do not use commands like `curl` or `wget` to query external GitHub repositories if the information can be found in the local reference directories. This ensures faster searches and provides better codebase context.
+*   **Caching New Sources**: If an agent needs to reference a new external source (such as a new C++ library or schematic repository) that is not currently present, the agent **MUST** clone or download that new source into the `docs/reference_implementations/` directory so it is available for future use.
