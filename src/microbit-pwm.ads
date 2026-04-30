@@ -11,7 +11,9 @@ package Microbit.PWM is
 
    --  Play a sequence of PCM samples from a constant array (must be 16-bit where Bit 15=0 and 0-14 is Duty)
    --  Sample_Rate determines how fast the sequence pointer is refreshed.
-   procedure Play_PCM (Data : Microbit.Audio.Audio_Buffer; Sample_Rate : Positive);
+   --  EasyDMA MAXCNT is 15-bit, so buffer length must not exceed 32767.
+   procedure Play_PCM (Data : Microbit.Audio.Audio_Buffer; Sample_Rate : Positive)
+     with Pre => Data'Length <= 32767;
 
    procedure Stop;
 

@@ -8,6 +8,8 @@ package Microbit.Microphone is
 
    --  Records audio from the microphone directly into the provided RAM buffer using EasyDMA.
    --  This procedure will block until the buffer is completely filled.
-   procedure Record_Sync (Data : out Microbit.Audio.Audio_Buffer);
+   --  EasyDMA MAXCNT is 15-bit, so buffer length must not exceed 32767.
+   procedure Record_Sync (Data : out Microbit.Audio.Audio_Buffer)
+     with Pre => Data'Length <= 32767;
 
 end Microbit.Microphone;

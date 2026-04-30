@@ -6,14 +6,11 @@ with Microbit.Microphone;
 with Microbit.PWM;
 with Microbit.Audio;
 with Ada.Real_Time; use Ada.Real_Time;
+with Parrot_Data;
 
 procedure Parrot is
    Now : Time;
    Btn_A_State : Button_State;
-
-   --  32768 samples at ~16kHz = ~2 seconds of audio.
-   --  64KB of RAM, neatly aligned for EasyDMA.
-   Buffer : aliased Microbit.Audio.Audio_Buffer (0 .. 32767) := (others => 0);
 
    Idle_Icon : constant Microbit.Display.Matrix :=
      ((False, False, False, False, False),
@@ -56,21 +53,22 @@ begin
          Microbit.Display.Show (Mic_Icon);
 
          --  Record ~2 seconds of audio directly into RAM
-         Microbit.Microphone.Record_Sync (Buffer);
+         Microbit.Microphone.Record_Sync (Parrot_Data.Buffer);
 
          Microbit.Console.Put_Line ("Recording finished. Formatting...");
          Microbit.Display.Show (Play_Icon);
 
          --  In-place format signed PCM to unsigned PWM
-         Microbit.Audio.Format_PCM_For_PWM (Buffer);
+         Microbit.Audio.Format_PCM_For_PWM (Parrot_Data.Buffer);
 
          Microbit.Console.Put_Line ("Playing PCM...");
          --  Play the audio back out through the speaker
          --  Using 16125 Hz: 1032kHz / 64 = 16.125 kHz
-         Microbit.PWM.Play_PCM (Buffer, 16125);
+         Microbit.PWM.Play_PCM (Parrot_Data.Buffer, 16125);
 
          --  Wait a bit before returning to idle
-         delay until Clock + Milliseconds (2500);
+         Now := Clock;
+         delay until Now + Milliseconds (2500);
 
          Microbit.Console.Put_Line ("System Ready.");
          Microbit.Display.Show (Idle_Icon);
