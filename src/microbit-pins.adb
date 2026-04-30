@@ -1,3 +1,4 @@
+pragma SPARK_Mode (Off);
 with NRF52833_SVD.GPIO; use NRF52833_SVD.GPIO;
 with NRF52833_SVD;      use NRF52833_SVD;
 with Interfaces;        use Interfaces;

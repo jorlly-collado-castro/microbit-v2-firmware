@@ -1,3 +1,4 @@
+pragma SPARK_Mode (Off);
 with System;
 with NRF52833_SVD.TWIM; use NRF52833_SVD.TWIM;
 with NRF52833_SVD.GPIO;
@@ -200,7 +201,7 @@ package body Microbit.I2C is
       Val     : Unsigned_8)
    is
       --  EasyDMA needs data in RAM, so we copy it to a local array
-      Buf : aliased Data_Buffer (1 .. 2) := (Reg, Val) with Volatile;
+      Buf : aliased constant Data_Buffer (1 .. 2) := (Reg, Val);
    begin
       Write (Address, Buf);
    end Write_Register;
@@ -211,7 +212,7 @@ package body Microbit.I2C is
       Data    : out Data_Buffer)
    is
       use System.Storage_Elements;
-      Reg_Buf : aliased Unsigned_8 := Reg with Volatile;
+      Reg_Buf : aliased constant Unsigned_8 := Reg;
       Timeout : Integer := 1_000_000;
    begin
       Last_Transfer_Error := False;

@@ -1,3 +1,4 @@
+pragma SPARK_Mode (Off);
 with Microbit.Pins;
 
 package body Microbit.Buttons is

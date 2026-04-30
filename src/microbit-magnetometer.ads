@@ -1,3 +1,4 @@
+pragma SPARK_Mode (On);
 with Interfaces; use Interfaces;
 
 package Microbit.Magnetometer is
@@ -13,6 +14,6 @@ package Microbit.Magnetometer is
    procedure Initialize;
 
    --  Read the current magnetic field values
-   function Read_Data return Axis_Data;
+   procedure Read_Data (Result : out Axis_Data);
 
 end Microbit.Magnetometer;

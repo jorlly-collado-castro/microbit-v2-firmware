@@ -1,3 +1,4 @@
+pragma SPARK_Mode (On);
 package Microbit.Display is
 
    type Matrix is array (0 .. 4, 0 .. 4) of Boolean;

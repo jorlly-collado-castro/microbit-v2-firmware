@@ -1,3 +1,4 @@
+pragma SPARK_Mode (On);
 with Microbit.Pins;
 
 package Microbit.Console is

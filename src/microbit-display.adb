@@ -1,3 +1,4 @@
+pragma SPARK_Mode (Off);
 with Microbit.Pins;
 with Ada.Real_Time; use Ada.Real_Time;
 

@@ -1,3 +1,5 @@
+pragma Warnings (Off);
+pragma SPARK_Mode (Off);
 pragma Style_Checks (Off);
 
 --  Copyright (c) 2010 - 2020, Nordic Semiconductor ASA All rights reserved.

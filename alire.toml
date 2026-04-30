@@ -10,3 +10,6 @@ project-files = ["microbit_v2.gpr"]
 
 [[depends-on]]
 light_tasking_nrf52833 = ">=15.3.0"
+
+[[depends-on]]
+gnatprove = "^15.1.0"

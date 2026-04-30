@@ -1,3 +1,4 @@
+pragma SPARK_Mode (On);
 with Microbit.I2C;
 with Ada.Real_Time; use Ada.Real_Time;
 with Ada.Unchecked_Conversion;
@@ -17,8 +18,13 @@ package body Microbit.Magnetometer is
 
    procedure Initialize is
       Who_Am_I : aliased Microbit.I2C.Data_Buffer (1 .. 1) := (others => 0);
+      Now : constant Time := Clock;
    begin
-      delay until Clock + Milliseconds (10);
+      if Now < Time_Last - Milliseconds (10) then
+         delay until Now + Milliseconds (10);
+      else
+         delay until Time_Last;
+      end if;
 
       --  Read WHO_AM_I to verify sensor presence
       Microbit.I2C.Read_Register (Address, WHO_AM_I_M, Who_Am_I);
@@ -37,9 +43,8 @@ package body Microbit.Magnetometer is
       Microbit.I2C.Write_Register (Address, CFG_REG_C_M, 16#10#);
    end Initialize;
 
-   function Read_Data return Axis_Data is
+   procedure Read_Data (Result : out Axis_Data) is
       Buf : aliased Microbit.I2C.Data_Buffer (1 .. 6) := (others => 0);
-      Result : Axis_Data;
       UX, UY, UZ : Unsigned_16;
    begin
       --  Set MSB of register address to 1 for auto-increment? 
@@ -54,8 +59,6 @@ package body Microbit.Magnetometer is
       Result.X := To_Int16 (UX);
       Result.Y := To_Int16 (UY);
       Result.Z := To_Int16 (UZ);
-
-      return Result;
    end Read_Data;
 
 end Microbit.Magnetometer;

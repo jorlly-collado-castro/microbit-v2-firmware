@@ -117,7 +117,7 @@ begin
      ("Please rotate the board in horizontal circles for 10 seconds.");
 
    --  Initialize Min/Max with first reading
-   Mag_Data := Microbit.Magnetometer.Read_Data;
+   Microbit.Magnetometer.Read_Data (Mag_Data);
    Min_X := Integer (Mag_Data.X);
    Max_X := Integer (Mag_Data.X);
    Min_Y := Integer (Mag_Data.Y);
@@ -130,7 +130,7 @@ begin
       Led_State  : Boolean := True;
    begin
       while Clock < End_Cal loop
-         Mag_Data := Microbit.Magnetometer.Read_Data;
+         Microbit.Magnetometer.Read_Data (Mag_Data);
 
          if Integer (Mag_Data.X) < Min_X then
             Min_X := Integer (Mag_Data.X);
@@ -177,7 +177,7 @@ begin
    Microbit.Console.Put_Line (Integer'Image (Integer (Offset_Y)));
 
    loop
-      Mag_Data := Microbit.Magnetometer.Read_Data;
+      Microbit.Magnetometer.Read_Data (Mag_Data);
 
       --  Subtract hard iron offsets
       Cal_X := Float (Mag_Data.X) - Offset_X;

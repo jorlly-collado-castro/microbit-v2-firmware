@@ -7,6 +7,7 @@ maintainers = ["Jorlly Collado <jorlly@collado.ch>"]
 maintainers-logins = ["jorlly-collado-castro"]
 licenses = "GPL-3.0-only"
 project-files = ["audio.gpr"]
+executables = ["audio"]
 
 [[depends-on]]
 microbit_v2 = "*"

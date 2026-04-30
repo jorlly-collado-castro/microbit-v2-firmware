@@ -1,3 +1,4 @@
+pragma SPARK_Mode (On);
 package Microbit.Pins is
 
    type Port_Id is (Port_0, Port_1);
@@ -19,7 +20,7 @@ package Microbit.Pins is
    procedure Clear (Pin : Pin_Id);
    procedure Toggle (Pin : Pin_Id);
 
-   function Read (Pin : Pin_Id) return Boolean;
+   function Read (Pin : Pin_Id) return Boolean with Volatile_Function, Global => null;
 
    ------------------------------------
    -- Micro:bit v2 Specific Pin Maps --

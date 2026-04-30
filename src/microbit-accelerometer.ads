@@ -1,3 +1,4 @@
+pragma SPARK_Mode (On);
 with Interfaces; use Interfaces;
 
 package Microbit.Accelerometer is
@@ -20,7 +21,7 @@ package Microbit.Accelerometer is
    procedure Initialize;
 
    --  Read the current acceleration values in raw format
-   function Read_Data return Axis_Data;
+   procedure Read_Data (Result : out Axis_Data);
 
    --  Convert raw axis data to milli-g
    function To_Milli_G (Raw : Axis_Data) return Float_Axis_Data;

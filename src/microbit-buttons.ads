@@ -1,3 +1,4 @@
+pragma SPARK_Mode (On);
 package Microbit.Buttons is
 
    type Button_Id is (Button_A, Button_B);
@@ -6,6 +7,6 @@ package Microbit.Buttons is
 
    procedure Initialize;
 
-   function State (Button : Button_Id) return Button_State;
+   function State (Button : Button_Id) return Button_State with Volatile_Function, Global => null;
 
 end Microbit.Buttons;

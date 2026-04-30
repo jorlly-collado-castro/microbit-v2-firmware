@@ -1,0 +1,6 @@
+pragma Restrictions (No_Allocators);
+pragma Restrictions (No_Implicit_Heap_Allocations);pragma SPARK_Mode (On);
+pragma Profile (Ravenscar);
+pragma Partition_Elaboration_Policy (Sequential);
+pragma Assertion_Policy (Check);
+pragma Overflow_Mode (General => Strict, Assertions => Strict);

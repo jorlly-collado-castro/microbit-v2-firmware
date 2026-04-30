@@ -1,3 +1,4 @@
+pragma SPARK_Mode (Off);
 with NRF52833_SVD.PWM;  use NRF52833_SVD.PWM;
 with NRF52833_SVD;      use NRF52833_SVD;
 with Microbit.Pins;

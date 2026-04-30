@@ -1,3 +1,4 @@
+pragma SPARK_Mode (On);
 with Interfaces; use Interfaces;
 
 package Microbit.I2C is

@@ -1,3 +1,4 @@
+pragma SPARK_Mode (On);
 package Microbit is
    pragma Pure;
 

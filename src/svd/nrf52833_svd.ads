@@ -1,3 +1,5 @@
+pragma Warnings (Off);
+pragma SPARK_Mode (Off);
 pragma Style_Checks (Off);
 pragma Restrictions (No_Elaboration_Code);
 

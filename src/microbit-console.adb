@@ -1,3 +1,4 @@
+pragma SPARK_Mode (Off);
 with NRF52833_SVD.UARTE; use NRF52833_SVD.UARTE;
 with NRF52833_SVD;       use NRF52833_SVD;
 with System.Storage_Elements;

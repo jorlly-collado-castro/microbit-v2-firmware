@@ -42,9 +42,9 @@ begin
    Microbit.Console.Put_Line ("Press Button A to zero the Accel.");
 
    loop
-      Accel_Raw := Microbit.Accelerometer.Read_Data;
+      Microbit.Accelerometer.Read_Data (Accel_Raw);
       Accel_Mg  := Microbit.Accelerometer.To_Milli_G (Accel_Raw);
-      Mag_Data  := Microbit.Magnetometer.Read_Data;
+      Microbit.Magnetometer.Read_Data (Mag_Data);
 
       --  If Button A is pressed, calibrate
       if State (Button_A) = Pressed then
