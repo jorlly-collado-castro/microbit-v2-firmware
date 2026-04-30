@@ -1,5 +1,6 @@
 pragma SPARK_Mode (Off);
 with NRF52833_SVD.PWM;  use NRF52833_SVD.PWM;
+with NRF52833_SVD.GPIO; use NRF52833_SVD.GPIO;
 with NRF52833_SVD;      use NRF52833_SVD;
 with Microbit.Pins;
 with System.Storage_Elements;
@@ -27,12 +28,16 @@ package body Microbit.PWM is
    procedure Initialize is
       use System.Storage_Elements;
       Run_Mic_Pin : constant Microbit.Pins.Pin_Id := (Microbit.Pins.Port_0, 20);
+      GPIO0 : GPIO_Peripheral with Import, Address => P0_Base;
    begin
       --  Enable the on-board amplifier/microphone regulator
       Microbit.Pins.Configure (Run_Mic_Pin, Mode => Microbit.Pins.Output, Pull => Microbit.Pins.Disabled);
+      GPIO0.PIN_CNF (Natural (Run_Mic_Pin.Pin)).DRIVE := H0H1;
       Microbit.Pins.Set (Run_Mic_Pin);
 
       Microbit.Pins.Configure (Speaker_Pin, Mode => Microbit.Pins.Output, Pull => Microbit.Pins.Disabled);
+      --  Set Speaker pin to High Drive to ensure sufficient current for the magnetic coil
+      GPIO0.PIN_CNF (Natural (Speaker_Pin.Pin)).DRIVE := H0H1;
 
       PWM0_Periph.PSEL.OUT_k (0).PIN     := OUT_PSEL_PIN_Field (Speaker_Pin.Pin);
       PWM0_Periph.PSEL.OUT_k (0).PORT    := OUT_PSEL_PORT_Field (Microbit.Pins.Port_Id'Pos (Speaker_Pin.Port));
