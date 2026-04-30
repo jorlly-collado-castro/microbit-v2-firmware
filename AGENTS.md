@@ -14,6 +14,15 @@ All agents working on this project must adhere strictly to **Atomic Commits**.
     *   `docs: <Description>` for updating this markdown file, SVD docs, or inline Ada code.
     *   `chore: <Description>` for Alire toolchain/crate maintenance.
 
+## Documentation Guidelines
+
+Agents **MUST** always update relevant documentation before committing meaningful code changes. This ensures the project remains continuously documented in sync with the codebase.
+
+*   **Update Examples README**: Whenever a new example is added or modified, update `examples/README.md` to reflect the new functionality.
+*   **Update Root README**: Keep the root `README.md` (if it exists) updated with the current state of the project, including newly supported hardware peripherals.
+*   **Update API Comments**: When creating or modifying HAL specifications (`.ads`), add or update SPARK contracts and explanatory comments.
+*   **Track State**: Leave clear traces of the current state of features, either in READMEs, or by creating/updating GitHub Issues when a task is partially completed or scoped for future work.
+
 ## Build System (`alr`) Usage
 
 Agents should prefer using `alr` for building and managing dependencies in order to remain aligned with standard Ada packaging.
