@@ -7,7 +7,8 @@ package Microbit.PWM is
 
    --  Set the frequency (in Hz) and duty cycle (0.0 to 1.0)
    --  Setting duty cycle to 0.0 effectively mutes the speaker.
-   procedure Set_Tone (Frequency : Float; Duty_Cycle : Float := 0.5);
+   procedure Set_Tone (Frequency : Float; Duty_Cycle : Float := 0.5)
+     with Pre => Frequency >= 0.0 and Duty_Cycle >= 0.0 and Duty_Cycle <= 1.0;
 
    --  Play a sequence of PCM samples from a constant array (must be 16-bit where Bit 15=0 and 0-14 is Duty)
    --  Sample_Rate determines how fast the sequence pointer is refreshed.

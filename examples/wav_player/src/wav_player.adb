@@ -1,7 +1,8 @@
-pragma SPARK_Mode (Off); -- Passing Address violates SPARK boundary, but is safe for DMA
+pragma SPARK_Mode (Off); -- Passing Address is safe for DMA
 with Microbit.Console;
 with Microbit.Display;
-with Microbit.Console;
+with Microbit.Buttons; use Microbit.Buttons;
+with Microbit.PWM;
 with Wav_Data;
 with Ada.Real_Time; use Ada.Real_Time;
 
