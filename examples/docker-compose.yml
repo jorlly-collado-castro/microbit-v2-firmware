@@ -17,6 +17,7 @@ services:
       echo 'Building sensors...' && cd /workspace/examples/sensors && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/sensors bin/sensors.hex &&
       echo 'Building compass...' && cd /workspace/examples/compass && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/compass bin/compass.hex &&
       echo 'Building audio...' && cd /workspace/examples/audio && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/audio bin/audio.hex &&
+      echo 'Building wav_player...' && cd /workspace/examples/wav_player && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/wav_player bin/wav_player.hex &&
       echo 'All examples built successfully!'
       "
 

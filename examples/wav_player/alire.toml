@@ -1,0 +1,17 @@
+name = "wav_player"
+description = "Micro:bit v2 WAV Player Example"
+version = "0.1.0"
+
+authors = ["Jorlly Collado <jorlly@collado.ch>"]
+maintainers = ["Jorlly Collado <jorlly@collado.ch>"]
+licenses = "GPL-3.0-only"
+website = ""
+tags = []
+
+executables = ["wav_player"]
+
+[[depends-on]]
+microbit_v2 = "*"
+
+[[pins]]
+microbit_v2 = { path='../..' }
