@@ -88,7 +88,7 @@ package body Microbit.PWM is
       PWM0_Periph.TASKS_SEQSTART (0).TASKS_SEQSTART := Trigger;
    end Set_Tone;
 
-   procedure Play_PCM (Data : Audio_Buffer; Sample_Rate : Positive) is
+   procedure Play_PCM (Data : Microbit.Audio.Audio_Buffer; Sample_Rate : Positive) is
       use System.Storage_Elements;
       Clock_Freq : constant Float := 16_000_000.0;
       Multiplier : constant Positive := 4; --  Multiply sample rate to get carrier frequency
