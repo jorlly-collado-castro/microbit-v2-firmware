@@ -19,6 +19,7 @@ services:
       echo 'Building audio...' && cd /workspace/examples/audio && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/audio bin/audio.hex &&
       echo 'Building wav_player...' && cd /workspace/examples/wav_player && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/wav_player bin/wav_player.hex &&
       echo 'Building parrot...' && cd /workspace/examples/parrot && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/parrot bin/parrot.hex &&
+      echo 'Building sound_meter...' && cd /workspace/examples/sound_meter && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/sound_meter bin/sound_meter.hex &&
       echo 'All examples built successfully!'
       "
 

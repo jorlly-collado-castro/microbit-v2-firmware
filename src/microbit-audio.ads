@@ -14,4 +14,9 @@ package Microbit.Audio is
    --  up to fill the 16-bit signed range (-32768..32767).
    procedure Format_SAADC_To_PCM (Buffer : in out Audio_Buffer);
 
+   --  Calculates the Sound Pressure Level (SPL) from a raw 12-bit SAADC buffer.
+   --  Returns the sound level in an approximate 8-bit scale (0.0 to 255.0).
+   --  Requires a sufficiently large buffer (e.g. 1000+ samples) for an accurate RMS calculation.
+   function Calculate_Sound_Level (Buffer : Audio_Buffer) return Float;
+
 end Microbit.Audio;
