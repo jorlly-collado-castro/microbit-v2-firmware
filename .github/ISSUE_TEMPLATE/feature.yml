@@ -1,0 +1,35 @@
+name: ✨ Feature
+description: Suggest a new HAL driver, module, or capability
+title: "feat: "
+labels: ["✨ feature"]
+body:
+  - type: textarea
+    attributes:
+      label: Feature summary
+      description: A clear and concise summary of the hardware feature or software capability you are proposing.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Motivation
+      description: Explain why this feature is needed or what problem it solves.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Acceptance criteria
+      description: List the requirements that must be met for this feature to be considered complete (e.g. "Must be 100% SPARK proven", "Must include an example app").
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Hardware Dependencies / Implementation ideas
+      description: (Optional) Mention any specific nRF52833 SVD peripherals (e.g., PPI, GPIOTE, TIMER) or edge connector pins required.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Additional information
+      description: Add any other relevant information, links, or context (e.g. links to Codal C++ reference implementations).
+    validations:
+      required: false

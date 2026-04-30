@@ -1,0 +1,22 @@
+title: "Idea: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to share an idea! Please fill out this form as completely as possible.
+  - type: textarea
+    attributes:
+      label: Describe the idea or feature you'd like to explore
+      description: Please describe the idea as clearly and concisely as possible. Remember to add context as to why you believe this would benefit the firmware.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Describe the solution you'd like to see
+      description: Please describe the implementation you would like to see. Example usage or Ada package specs are a great way to provide context.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional information
+      description: Add any other information related to the idea here. If your idea is related to any existing issues or discussions, link them here.

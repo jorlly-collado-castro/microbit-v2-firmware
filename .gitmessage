@@ -1,0 +1,19 @@
+<type>: <Description>
+
+# Summary
+# <A clear and concise summary of the changes made in this commit>
+
+# Motivation
+# <Explain why this change is needed or what problem it solves>
+
+# Additional Information
+# <Add any other relevant information, links, or context (e.g. related issue #)>
+
+# --- PROJECT COMMIT STANDARDS ---
+# Commits must be ATOMIC (one logical unit of work per commit).
+# 
+# <type> must be one of the following:
+#   feat:  New HAL modules, drivers, or capabilities.
+#   fix:   Bug fixes in memory/register mapping or logic.
+#   docs:  Updating markdown files, SVD docs, or inline Ada code.
+#   chore: Alire toolchain, Docker, or crate maintenance.
