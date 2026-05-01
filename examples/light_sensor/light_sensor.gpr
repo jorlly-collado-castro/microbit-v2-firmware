@@ -1,0 +1,31 @@
+with "config/light_sensor_config.gpr";
+with "../../microbit_v2.gpr";
+
+project Light_Sensor is
+
+   for Source_Dirs use ("src/", "config/");
+   for Object_Dir use "obj/" & Light_Sensor_Config.Build_Profile;
+   for Create_Missing_Dirs use "True";
+   for Exec_Dir use "bin";
+   for Main use ("light_sensor.adb");
+
+   for Target use "arm-eabi";
+   for Runtime ("Ada") use "light-tasking-nrf52833";
+
+   package Compiler is
+      for Default_Switches ("Ada") use Light_Sensor_Config.Ada_Compiler_Switches &
+         ("-gnat2022",
+          "-gnatp",
+          "-mfloat-abi=hard",
+          "-mfpu=fpv4-sp-d16");
+   end Compiler;
+
+   package Binder is
+      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
+   end Binder;
+
+   package Install is
+      for Artifacts (".") use ("share");
+   end Install;
+
+end Light_Sensor;

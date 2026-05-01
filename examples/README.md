@@ -15,6 +15,7 @@ This directory contains example applications demonstrating how to use the `micro
 *   **Sound_Meter** (`examples/sound_meter/`): Displays real-time audio volume (SPL) as a bar graph on the LED matrix using Ravenscar multitasking.
 *   **Logo_Touch** (`examples/logo_touch/`): Interactive LED animation that responds to touching the capacitive logo pad, demonstrating GPIOTE and PPI interaction.
 *   **Temperature** (`examples/temperature/`): Reads the nRF52833's internal die temperature sensor and prints it to the serial console.
+*   **Light_Sensor** (`examples/light_sensor/`): Uses the LED matrix in reverse-bias mode to sense ambient light levels and prints the value to the serial console.
 
 ## 1. Building the Examples
 

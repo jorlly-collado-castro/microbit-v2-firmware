@@ -16,6 +16,12 @@ package Microbit.Display is
    procedure Set_Pixel (X, Y : Integer; State : Boolean)
      with Pre => X in 0 .. 4 and Y in 0 .. 4;
 
+   --  Pause the background refresh task (useful for using the LED matrix as a sensor)
+   procedure Pause;
+
+   --  Resume the background refresh task
+   procedure Resume;
+
    --  Pre-defined images
    Heart : constant Matrix :=
      ((False, True,  False, True,  False),
