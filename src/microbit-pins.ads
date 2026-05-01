@@ -37,4 +37,9 @@ package Microbit.Pins is
    P1  : constant Pin_Id := (Port_0, 3);
    P2  : constant Pin_Id := (Port_0, 4);
 
+   -- SPI (Edge Connector)
+   SPI_SCK  : constant Pin_Id := (Port_0, 17); -- Pad 13
+   SPI_MISO : constant Pin_Id := (Port_0, 1);  -- Pad 14
+   SPI_MOSI : constant Pin_Id := (Port_0, 13); -- Pad 15
+
 end Microbit.Pins;
