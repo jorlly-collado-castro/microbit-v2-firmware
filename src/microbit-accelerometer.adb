@@ -48,6 +48,9 @@ package body Microbit.Accelerometer is
       Microbit.I2C.Write_Register (Address, CTRL_REG4_A, 16#88#);
    end Initialize;
 
+   function Saturate_Negate (Val : Integer_16) return Integer_16 is
+      (if Val = Integer_16'First then Integer_16'Last else -Val);
+
    procedure Read_Data (Result : out Axis_Data) is
       --  Data buffer for X_L, X_H, Y_L, Y_H, Z_L, Z_H
       Buf : aliased Microbit.I2C.Data_Buffer (1 .. 6) := [others => 0];
@@ -62,8 +65,12 @@ package body Microbit.Accelerometer is
       UZ := Shift_Left (Unsigned_16 (Buf (6)), 8) or Unsigned_16 (Buf (5));
 
       --  Unchecked conversion to 16-bit signed integers (Two's complement)
-      Result.X := To_Int16 (UX);
-      Result.Y := To_Int16 (UY);
+      --  Map the LSM303AGR chip axes to the physical Micro:bit v2 board axes
+      --  Board X (Right)   = -Raw_Y
+      --  Board Y (Forward) = -Raw_X
+      --  Board Z (Up)      =  Raw_Z
+      Result.X := Saturate_Negate (To_Int16 (UY));
+      Result.Y := Saturate_Negate (To_Int16 (UX));
       Result.Z := To_Int16 (UZ);
    end Read_Data;
 

@@ -43,6 +43,9 @@ package body Microbit.Magnetometer is
       Microbit.I2C.Write_Register (Address, CFG_REG_C_M, 16#10#);
    end Initialize;
 
+   function Saturate_Negate (Val : Integer_16) return Integer_16 is
+      (if Val = Integer_16'First then Integer_16'Last else -Val);
+
    procedure Read_Data (Result : out Axis_Data) is
       Buf : aliased Microbit.I2C.Data_Buffer (1 .. 6) := [others => 0];
       UX, UY, UZ : Unsigned_16;
@@ -56,8 +59,12 @@ package body Microbit.Magnetometer is
       UY := Shift_Left (Unsigned_16 (Buf (4)), 8) or Unsigned_16 (Buf (3));
       UZ := Shift_Left (Unsigned_16 (Buf (6)), 8) or Unsigned_16 (Buf (5));
 
-      Result.X := To_Int16 (UX);
-      Result.Y := To_Int16 (UY);
+      --  Map the LSM303AGR chip axes to the physical Micro:bit v2 board axes
+      --  Board X (Right)   = -Raw_Y
+      --  Board Y (Forward) = -Raw_X
+      --  Board Z (Up)      =  Raw_Z
+      Result.X := Saturate_Negate (To_Int16 (UY));
+      Result.Y := Saturate_Negate (To_Int16 (UX));
       Result.Z := To_Int16 (UZ);
    end Read_Data;
 
