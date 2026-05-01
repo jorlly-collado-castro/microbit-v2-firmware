@@ -15,7 +15,7 @@ project Microbit_v2 is
 
    package Compiler is
       for Switches ("Ada") use (
-         "-g", "-O2", "-gnatwa", "-gnatwe", "-gnatQ", "-gnat12", "-gnatw.X",
+         "-g", "-O2", "-gnatwa", "-gnatwe", "-gnatQ", "-gnat2022", "-gnatw.X",
          "-mfloat-abi=hard", "-mfpu=fpv4-sp-d16"
       );
    end Compiler;

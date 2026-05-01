@@ -5,27 +5,26 @@ with Microbit.Display.Font;
 
 package body Microbit.Display is
 
-   Rows : constant array (0 .. 4) of Microbit.Pins.Pin_Id :=
-     ((Microbit.Pins.Port_0, 21),
+   Rows : constant array (Pixel_Coordinate) of Microbit.Pins.Pin_Id :=
+     [(Microbit.Pins.Port_0, 21),
       (Microbit.Pins.Port_0, 22),
       (Microbit.Pins.Port_0, 15),
       (Microbit.Pins.Port_0, 24),
-      (Microbit.Pins.Port_0, 19));
+      (Microbit.Pins.Port_0, 19)];
 
-   Cols : constant array (0 .. 4) of Microbit.Pins.Pin_Id :=
-     ((Microbit.Pins.Port_0, 28),
+   Cols : constant array (Pixel_Coordinate) of Microbit.Pins.Pin_Id :=
+     [(Microbit.Pins.Port_0, 28),
       (Microbit.Pins.Port_0, 11),
       (Microbit.Pins.Port_0, 31),
       (Microbit.Pins.Port_1,  5),
-      (Microbit.Pins.Port_0, 30));
+      (Microbit.Pins.Port_0, 30)];
 
    type Display_Mode_Type is (Static, Scrolling);
 
    protected Display_State is
       procedure Show (Image : Matrix);
       procedure Clear;
-      procedure Set_Pixel (X, Y : Integer; State : Boolean)
-        with Pre => X in 0 .. 4 and Y in 0 .. 4;
+      procedure Set_Pixel (X, Y : Pixel_Coordinate; State : Boolean);
       procedure Start_Scroll (Text : String; Speed : Integer);
       procedure Advance_Scroll;
       function Get return Matrix;
@@ -37,10 +36,10 @@ package body Microbit.Display is
       entry Wait_To_Start;
    private
       Mode          : Display_Mode_Type := Static;
-      Current_Image : Matrix := (others => (others => False));
+      Current_Image : Matrix := [others => [others => False]];
       
       -- Scroll State
-      Scroll_Buffer : String (1 .. 255) := (others => ' ');
+      Scroll_Buffer : String (1 .. 255) := [others => ' '];
       Scroll_Length : Natural := 0;
       Scroll_Offset : Integer := 0;
       Scroll_Speed_Ticks : Integer := 50; -- Derived from Delay_Ms / 3ms
@@ -59,15 +58,13 @@ package body Microbit.Display is
       procedure Clear is
       begin
          Mode := Static;
-         Current_Image := (others => (others => False));
+         Current_Image := [others => [others => False]];
       end Clear;
 
-      procedure Set_Pixel (X, Y : Integer; State : Boolean) is
+      procedure Set_Pixel (X, Y : Pixel_Coordinate; State : Boolean) is
       begin
-         if X in 0 .. 4 and then Y in 0 .. 4 then
-            Mode := Static;
-            Current_Image (Y, X) := State;
-         end if;
+         Mode := Static;
+         Current_Image (Y, X) := State;
       end Set_Pixel;
 
       procedure Start_Scroll (Text : String; Speed : Integer) is
@@ -89,7 +86,7 @@ package body Microbit.Display is
          Total_Pixels : constant Integer := Scroll_Length * 6; -- 5 for char, 1 for space
       begin
          if Mode = Scrolling then
-            Scroll_Offset := Scroll_Offset + 1;
+            Scroll_Offset := @ + 1;
             if Scroll_Offset >= Total_Pixels then
                Scroll_Offset := -5; -- Loop back
             end if;
@@ -97,7 +94,7 @@ package body Microbit.Display is
       end Advance_Scroll;
 
       function Get return Matrix is
-         Result : Matrix := (others => (others => False));
+         Result : Matrix := [others => [others => False]];
          Char_Idx : Integer;
          Col_In_Char : Integer;
          C : Character;
@@ -107,9 +104,9 @@ package body Microbit.Display is
             return Current_Image;
          else
             -- Calculate frame based on Scroll_Offset
-            for Screen_Col in 0 .. 4 loop
+            for Screen_Col in Pixel_Coordinate loop
                declare
-                  Global_Col : constant Integer := Scroll_Offset + Screen_Col;
+                  Global_Col : constant Integer := Scroll_Offset + Integer (Screen_Col);
                begin
                   if Global_Col >= 0 and Global_Col < Scroll_Length * 6 then
                      Char_Idx := (Global_Col / 6) + 1;
@@ -118,8 +115,8 @@ package body Microbit.Display is
                         C := Scroll_Buffer (Char_Idx);
                         if C in ' ' .. '~' then
                            Font_M := Microbit.Display.Font.Data (C);
-                           for Row in 0 .. 4 loop
-                              Result (Row, Screen_Col) := Font_M (Row, Col_In_Char);
+                           for Row in Pixel_Coordinate loop
+                              Result (Row, Screen_Col) := Font_M (Row, Pixel_Coordinate (Col_In_Char));
                            end loop;
                         end if;
                      end if;
@@ -168,7 +165,7 @@ package body Microbit.Display is
    task body Refresher is
       Next_Time   : Time;
       Period      : constant Time_Span := Milliseconds (3); 
-      Current_Row : Integer := 0;
+      Current_Row : Pixel_Coordinate := 0;
       Image       : Matrix;
       Tick_Counter : Integer := 0;
    begin
@@ -178,46 +175,52 @@ package body Microbit.Display is
       loop
          if not Display_State.Is_Paused then
             -- Handle scrolling tick
-            Tick_Counter := Tick_Counter + 1;
+            Tick_Counter := @ + 1;
             if Tick_Counter >= Display_State.Get_Scroll_Ticks then
                Display_State.Advance_Scroll;
                Tick_Counter := 0;
             end if;
 
-            for C in 0 .. 4 loop
+            for C in Pixel_Coordinate loop
                Microbit.Pins.Set (Cols (C));
             end loop;
-            for R in 0 .. 4 loop
+            for R in Pixel_Coordinate loop
                Microbit.Pins.Clear (Rows (R));
             end loop;
 
             Image := Display_State.Get;
 
-            for C in 0 .. 4 loop
+            for C in Pixel_Coordinate loop
                if Image (Current_Row, C) then
                   Microbit.Pins.Clear (Cols (C));
                end if;
             end loop;
 
             Microbit.Pins.Set (Rows (Current_Row));
-            Current_Row := (Current_Row + 1) mod 5;
+            Current_Row := (if Current_Row = Pixel_Coordinate'Last then 0 else @ + 1);
          else
             Tick_Counter := 0;
          end if;
          
-         Next_Time := Next_Time + Period;
+         Next_Time := @ + Period;
          delay until Next_Time;
       end loop;
    end Refresher;
 
+   --  Return the actual current image state for SPARK proof modeling
+   function Pixel_State (X, Y : Pixel_Coordinate) return Boolean is
+   begin
+      return Display_State.Get (Y, X);
+   end Pixel_State;
+
    procedure Initialize is
    begin
-      for R in 0 .. 4 loop
+      for R in Pixel_Coordinate loop
          Microbit.Pins.Configure (Rows (R), Mode => Microbit.Pins.Output);
          Microbit.Pins.Clear (Rows (R));
       end loop;
       
-      for C in 0 .. 4 loop
+      for C in Pixel_Coordinate loop
          Microbit.Pins.Configure (Cols (C), Mode => Microbit.Pins.Output);
          Microbit.Pins.Set (Cols (C));
       end loop;
@@ -235,9 +238,9 @@ package body Microbit.Display is
       Display_State.Clear;
    end Clear;
 
-   procedure Set_Pixel (X, Y : Integer; State : Boolean) is
+   procedure Set_Pixel (X, Y : Pixel_Coordinate; State_Val : Boolean) is
    begin
-      Display_State.Set_Pixel (X, Y, State);
+      Display_State.Set_Pixel (X, Y, State_Val);
    end Set_Pixel;
 
    procedure Scroll (Text : String; Delay_Ms : Integer := 150) is
@@ -249,10 +252,10 @@ package body Microbit.Display is
    begin
       Display_State.Pause;
       
-      for C in 0 .. 4 loop
+      for C in Pixel_Coordinate loop
          Microbit.Pins.Set (Cols (C));
       end loop;
-      for R in 0 .. 4 loop
+      for R in Pixel_Coordinate loop
          Microbit.Pins.Clear (Rows (R));
       end loop;
    end Pause;

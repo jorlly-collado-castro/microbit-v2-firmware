@@ -29,7 +29,7 @@ begin
       if Microbit.Buttons.State (Microbit.Buttons.Button_A) = Microbit.Buttons.Pressed then
          Microbit.Display.Show (Microbit.Display.Heart);
       else
-         Microbit.Display.Set_Pixel (X, Y, True);
+         Microbit.Display.Set_Pixel (Microbit.Display.Pixel_Coordinate (X), Microbit.Display.Pixel_Coordinate (Y), True);
          
          X := X + Dir_X;
          if X = 4 then

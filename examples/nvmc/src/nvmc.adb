@@ -5,7 +5,7 @@ with Microbit.Buttons;
 with System;
 with Ada.Real_Time; use Ada.Real_Time;
 
-procedure Nvmc_Example is
+procedure Nvmc is
    --  Use the very last page of flash to avoid overwriting our own code!
    --  512KB = 0x80000 bytes. Last page = 0x80000 - 0x1000 = 0x7F000
    Page_Address : constant System.Address := System'To_Address (16#0007_F000#);
@@ -45,11 +45,7 @@ begin
    Put_Hex (Read_Value);
 
    --  2. Determine the counter. If flash is empty (0xFFFFFFFF), start at 0.
-   if Read_Value = 16#FFFF_FFFF# then
-      Saved_Counter := 0;
-   else
-      Saved_Counter := Read_Value;
-   end if;
+   Saved_Counter := (if Read_Value = 16#FFFF_FFFF# then 0 else Read_Value);
 
    Update_Display;
 
@@ -102,4 +98,4 @@ begin
       end if;
       delay until Clock + Milliseconds (50);
    end loop;
-end Nvmc_Example;
+end Nvmc;

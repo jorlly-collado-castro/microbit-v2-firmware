@@ -12,12 +12,12 @@ package body Microbit.Accelerometer is
    WHO_AM_I_A  : constant Unsigned_8 := 16#0F#;
    
    --  I2C Address
-   Address     : constant Unsigned_8 := Microbit.I2C.Default_Accel_Address;
+   Address     : constant Microbit.I2C.Device_Address := Microbit.I2C.Default_Accel_Address;
 
    function To_Int16 is new Ada.Unchecked_Conversion (Source => Unsigned_16, Target => Integer_16);
 
    procedure Initialize is
-      Who_Am_I : aliased Microbit.I2C.Data_Buffer (1 .. 1) := (others => 0);
+      Who_Am_I : aliased Microbit.I2C.Data_Buffer (1 .. 1) := [others => 0];
       Now : constant Time := Clock;
    begin
       --  The LSM303AGR requires at least 6.4ms after power-up before it
@@ -50,7 +50,7 @@ package body Microbit.Accelerometer is
 
    procedure Read_Data (Result : out Axis_Data) is
       --  Data buffer for X_L, X_H, Y_L, Y_H, Z_L, Z_H
-      Buf : aliased Microbit.I2C.Data_Buffer (1 .. 6) := (others => 0);
+      Buf : aliased Microbit.I2C.Data_Buffer (1 .. 6) := [others => 0];
       UX, UY, UZ : Unsigned_16;
    begin
       --  Set MSB of register address to 1 to enable auto-increment for reading multiple bytes

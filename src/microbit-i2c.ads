@@ -3,8 +3,11 @@ with Interfaces; use Interfaces;
 
 package Microbit.I2C is
 
+   type Device_Address is new Unsigned_8
+     with Static_Predicate => Device_Address <= 16#7F#;
+
    --  Default address for LSM303AGR Accelerometer
-   Default_Accel_Address : constant Unsigned_8 := 16#19#;
+   Default_Accel_Address : constant Device_Address := 16#19#;
    
    type Data_Buffer is array (Natural range <>) of Unsigned_8;
 
@@ -14,32 +17,30 @@ package Microbit.I2C is
 
    --  Write data to an I2C device
    procedure Write
-     (Address : Unsigned_8;
+     (Address : Device_Address;
       Data    : Data_Buffer)
      with Pre => Data'Length <= 65535;
 
    --  Read data from an I2C device
    procedure Read
-     (Address : Unsigned_8;
+     (Address : Device_Address;
       Data    : out Data_Buffer)
      with Pre => Data'Length <= 65535;
 
    --  Write to a specific register (common I2C sequence: write reg addr, then read/write)
    --  This effectively performs a Write(Address, [Reg, Val])
    procedure Write_Register
-     (Address : Unsigned_8;
+     (Address : Device_Address;
       Reg     : Unsigned_8;
       Val     : Unsigned_8);
 
-   --  Read a specific register or block of registers.
-   --  It writes the Reg address, issues a Repeated Start, and reads Data'Length bytes.
+   --  Read from a specific register
    procedure Read_Register
-     (Address : Unsigned_8;
+     (Address : Device_Address;
       Reg     : Unsigned_8;
       Data    : out Data_Buffer)
      with Pre => Data'Length <= 65535;
 
    function Check_Error return Boolean;
-
 
 end Microbit.I2C;

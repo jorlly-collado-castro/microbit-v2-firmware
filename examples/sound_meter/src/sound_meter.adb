@@ -60,10 +60,10 @@ begin
       end if;
       
       -- Draw a bar graph on the matrix
-      for R in 0 .. 4 loop
-         for C in 0 .. 4 loop
+      for R in Microbit.Display.Pixel_Coordinate loop
+         for C in Microbit.Display.Pixel_Coordinate loop
             -- Fill bottom to top, left to right
-            if (4 - R) * 5 + (C + 1) <= Leds then
+            if (4 - Integer (R)) * 5 + (Integer (C) + 1) <= Leds then
                M (R, C) := True;
             else
                M (R, C) := False;

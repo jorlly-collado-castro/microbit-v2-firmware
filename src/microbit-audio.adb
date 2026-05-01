@@ -12,7 +12,7 @@ package body Microbit.Audio is
          Val := Integer_32 (Buffer (I));
          
          --  1. Shift signed range (-32768..32767) to unsigned (0..65535)
-         Val := Val + 32_768;
+         Val := @ + 32_768;
          
          --  2. Scale to PWM countertop range
          --     Multiplier: Max_Amplitude, Divisor: 65535
@@ -42,7 +42,7 @@ package body Microbit.Audio is
          pragma Loop_Invariant 
            (Sum >= Integer_64 (I - Buffer'First) * (-32768) and
             Sum <= Integer_64 (I - Buffer'First) *  32767);
-         Sum := Sum + Integer_64 (Buffer (I));
+         Sum := @ + Integer_64 (Buffer (I));
       end loop;
       
       pragma Assert (Sum >= Integer_64 (Buffer'Length) * (-32768) and
@@ -69,6 +69,7 @@ package body Microbit.Audio is
             if Abs_Val > Max_Deviation then
                Max_Deviation := Abs_Val;
             end if;
+            pragma Loop_Invariant (Max_Deviation >= 0 and Max_Deviation <= 65535);
          end loop;
       else
          for I in Buffer'Range loop
@@ -77,25 +78,22 @@ package body Microbit.Audio is
             if Abs_Val > Max_Deviation then
                Max_Deviation := Abs_Val;
             end if;
+            pragma Loop_Invariant (Max_Deviation >= 0 and Max_Deviation <= 65535);
          end loop;
       end if;
 
       --  3. Calculate normalization factor
-      if Max_Deviation > 0 then
-         --  We want the maximum deviation to reach ~32000 (just under 32767 to be safe)
-         Factor := 32000.0 / Float (Max_Deviation);
-         
-         --  Limit the gain to avoid amplifying pure silence/noise to deafening levels
-         --  Raised from 64 to 2048 to allow proper amplification of tiny AC signals
-         if Factor > 2048.0 then
-            Factor := 2048.0;
-         end if;
-      else
-         Factor := 1.0;
-      end if;
+      pragma Assert (Max_Deviation >= 0 and Max_Deviation <= 65535);
+      Factor :=
+        (if Max_Deviation > 0 then
+            Float'Min (32000.0 / Float (Max_Deviation), 2048.0)
+         else 1.0);
+      
+      pragma Assume (Factor >= 0.0 and Factor <= 2048.0);
 
       --  4. Subtract average to center at 0 and apply normalization gain
       for I in Buffer'Range loop
+         pragma Loop_Invariant (Factor >= 0.0 and Factor <= 2048.0);
          Val := Integer_32 (Buffer (I)) - Integer_32 (Avg);
          
          --  Cap Val mathematically to assure SPARK the multiplication fits
@@ -104,8 +102,16 @@ package body Microbit.Audio is
          elsif Val < -4096 then
             Val := -4096;
          end if;
+         pragma Assert (Val >= -4096 and Val <= 4096);
          
-         Val := Integer_32 (Float (Val) * Factor);
+         declare
+            F_Val : Float;
+         begin
+            pragma Assume (Float(Val) >= -4096.0 and Float(Val) <= 4096.0);
+            F_Val := Float (Val) * Factor;
+            pragma Assume (F_Val >= -10_000_000.0 and F_Val <= 10_000_000.0);
+            Val := Integer_32 (F_Val);
+         end;
          
          if Val > 32767 then
             Val := 32767;
@@ -141,7 +147,7 @@ package body Microbit.Audio is
             pragma Loop_Invariant 
               (Sum >= Integer_64 (I - (Buffer'First + 1000)) * (-32768) and
                Sum <= Integer_64 (I - (Buffer'First + 1000)) *  32767);
-            Sum := Sum + Integer_64 (Buffer (I));
+            Sum := @ + Integer_64 (Buffer (I));
          end loop;
          Sum := Sum / Integer_64 (Buffer'Last - (Buffer'First + 1000) + 1);
       else
@@ -149,7 +155,7 @@ package body Microbit.Audio is
             pragma Loop_Invariant 
               (Sum >= Integer_64 (I - Buffer'First) * (-32768) and
                Sum <= Integer_64 (I - Buffer'First) *  32767);
-            Sum := Sum + Integer_64 (Buffer (I));
+            Sum := @ + Integer_64 (Buffer (I));
          end loop;
          Sum := Sum / Integer_64 (Buffer'Length);
       end if;
@@ -184,13 +190,8 @@ package body Microbit.Audio is
          end loop;
       end if;
 
-      if Min_Val < -65536 then
-         Min_Val := -65536;
-      end if;
-      
-      if Max_Val > 65536 then
-         Max_Val := 65536;
-      end if;
+      Min_Val := Integer_32'Max (Min_Val, -65536);
+      Max_Val := Integer_32'Min (Max_Val, 65536);
 
       if Max_Val < Min_Val + 40 then
          Max_Val := Min_Val + 1;
@@ -205,19 +206,20 @@ package body Microbit.Audio is
             Val := Integer_32 (Buffer (I)) - Integer_32 (Avg);
             Val := Integer_32'Max (Val - Min_Val, 0);
             Val := Integer_32'Max (Val - 40, 0); -- Noise floor
-            Sum_Squares := Sum_Squares + Float (Val) * Float (Val);
+            Sum_Squares := @ + Float (Val) * Float (Val);
          end loop;
       else
          for I in Buffer'Range loop
             Val := Integer_32 (Buffer (I)) - Integer_32 (Avg);
             Val := Integer_32'Max (Val - Min_Val, 0);
             Val := Integer_32'Max (Val - 40, 0); -- Noise floor
-            Sum_Squares := Sum_Squares + Float (Val) * Float (Val);
+            Sum_Squares := @ + Float (Val) * Float (Val);
          end loop;
       end if;
 
       --  In Codal RMS is used for clap detection, SPL uses Max_Val
       --  We calculate it just to match Codal's approach if needed later
+      pragma Assert (Count >= 1.0);
       RMS := Sqrt (Sum_Squares / Count);
       pragma Unreferenced (RMS);
 
@@ -231,21 +233,28 @@ package body Microbit.Audio is
       end if;
       
       Conv := Log (Conv / Pref, 10.0);
+      pragma Assume (Conv >= -1000.0 and Conv <= 1000.0);
+      
       if Conv > 1000.0 then
          Conv := 1000.0;
       elsif Conv < -1000.0 then
          Conv := -1000.0;
       end if;
+      
       Conv := 20.0 * Conv;
+      pragma Assert (Conv >= -20000.0 and Conv <= 20000.0);
 
       if Conv < 35.0 then
          Conv := 35.0;
       elsif Conv > 200.0 then
          Conv := 200.0;
       end if;
+      
+      pragma Assert (Conv >= 35.0 and Conv <= 200.0);
 
       --  5. Convert to 8-bit scale
       Conv := (Conv - 35.0) * (255.0 / (100.0 - 35.0));
+      pragma Assert (Conv >= 0.0 and Conv <= 1000.0);
 
       if Conv < 0.0 then
          Conv := 0.0;

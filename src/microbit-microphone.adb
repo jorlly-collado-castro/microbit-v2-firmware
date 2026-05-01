@@ -14,11 +14,11 @@ package body Microbit.Microphone is
       -- We must use GPIO_Periph for port 0 since Run_Mic_Pin is Port_0
       GPIO0 : GPIO_Peripheral with Import, Address => P0_Base;
    begin
-      --  Power on the microphone
+      --  Configure the microphone power pin but leave it off
       Microbit.Pins.Configure (Run_Mic_Pin, Mode => Microbit.Pins.Output, Pull => Microbit.Pins.Disabled);
       --  Set high drive to ensure power regulator works properly
       GPIO0.PIN_CNF (Natural (Run_Mic_Pin.Pin)).DRIVE := H0H1;
-      Microbit.Pins.Set (Run_Mic_Pin);
+      Microbit.Pins.Clear (Run_Mic_Pin);
 
       --  Enable SAADC
       SAADC_Periph.ENABLE.ENABLE := Enabled;
@@ -51,6 +51,10 @@ package body Microbit.Microphone is
    procedure Record_Sync (Buffer_Address : System.Address; Length : Natural) is
       use System.Storage_Elements;
    begin
+      --  Power on the microphone and wait for it to stabilize
+      Microbit.Pins.Set (Run_Mic_Pin);
+      delay until Clock + Milliseconds (3);
+
       --  Set up EasyDMA
       SAADC_Periph.RESULT.PTR := UInt32 (To_Integer (Buffer_Address));
       SAADC_Periph.RESULT.MAXCNT.MAXCNT := UInt15 (Length);
@@ -83,6 +87,9 @@ package body Microbit.Microphone is
 
       SAADC_Periph.EVENTS_END.EVENTS_END := NotGenerated;
       SAADC_Periph.EVENTS_STOPPED.EVENTS_STOPPED := NotGenerated;
+      
+      --  Power off the microphone to save power and turn off the LED indicator
+      Microbit.Pins.Clear (Run_Mic_Pin);
    end Record_Sync;
 
 end Microbit.Microphone;

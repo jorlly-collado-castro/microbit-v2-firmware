@@ -12,12 +12,12 @@ package body Microbit.Magnetometer is
    WHO_AM_I_M    : constant Unsigned_8 := 16#4F#;
    
    --  I2C Address
-   Address       : constant Unsigned_8 := 16#1E#;
+   Address       : constant Microbit.I2C.Device_Address := 16#1E#;
 
    function To_Int16 is new Ada.Unchecked_Conversion (Source => Unsigned_16, Target => Integer_16);
 
    procedure Initialize is
-      Who_Am_I : aliased Microbit.I2C.Data_Buffer (1 .. 1) := (others => 0);
+      Who_Am_I : aliased Microbit.I2C.Data_Buffer (1 .. 1) := [others => 0];
       Now : constant Time := Clock;
    begin
       if Now < Time_Last - Milliseconds (10) then
@@ -44,7 +44,7 @@ package body Microbit.Magnetometer is
    end Initialize;
 
    procedure Read_Data (Result : out Axis_Data) is
-      Buf : aliased Microbit.I2C.Data_Buffer (1 .. 6) := (others => 0);
+      Buf : aliased Microbit.I2C.Data_Buffer (1 .. 6) := [others => 0];
       UX, UY, UZ : Unsigned_16;
    begin
       --  Set MSB of register address to 1 for auto-increment? 
