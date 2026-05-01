@@ -1,6 +1,7 @@
 pragma SPARK_Mode (Off);
 with Microbit.Pins;
 with Ada.Real_Time; use Ada.Real_Time;
+with Microbit.Display.Font;
 
 package body Microbit.Display is
 
@@ -18,19 +19,32 @@ package body Microbit.Display is
       (Microbit.Pins.Port_1,  5),
       (Microbit.Pins.Port_0, 30));
 
+   type Display_Mode_Type is (Static, Scrolling);
+
    protected Display_State is
       procedure Show (Image : Matrix);
       procedure Clear;
       procedure Set_Pixel (X, Y : Integer; State : Boolean)
         with Pre => X in 0 .. 4 and Y in 0 .. 4;
+      procedure Start_Scroll (Text : String; Speed : Integer);
+      procedure Advance_Scroll;
       function Get return Matrix;
       procedure Start;
       procedure Pause;
       procedure Resume;
       function Is_Paused return Boolean;
+      function Get_Scroll_Ticks return Integer;
       entry Wait_To_Start;
    private
+      Mode          : Display_Mode_Type := Static;
       Current_Image : Matrix := (others => (others => False));
+      
+      -- Scroll State
+      Scroll_Buffer : String (1 .. 255) := (others => ' ');
+      Scroll_Length : Natural := 0;
+      Scroll_Offset : Integer := 0;
+      Scroll_Speed_Ticks : Integer := 50; -- Derived from Delay_Ms / 3ms
+
       Is_Started    : Boolean := False;
       Paused        : Boolean := False;
    end Display_State;
@@ -38,25 +52,88 @@ package body Microbit.Display is
    protected body Display_State is
       procedure Show (Image : Matrix) is
       begin
+         Mode := Static;
          Current_Image := Image;
       end Show;
 
       procedure Clear is
       begin
+         Mode := Static;
          Current_Image := (others => (others => False));
       end Clear;
 
       procedure Set_Pixel (X, Y : Integer; State : Boolean) is
       begin
          if X in 0 .. 4 and then Y in 0 .. 4 then
+            Mode := Static;
             Current_Image (Y, X) := State;
          end if;
       end Set_Pixel;
 
-      function Get return Matrix is
+      procedure Start_Scroll (Text : String; Speed : Integer) is
+         L : constant Natural := Text'Length;
       begin
-         return Current_Image;
+         Mode := Scrolling;
+         Scroll_Length := L;
+         if L > 0 then
+            Scroll_Buffer (1 .. L) := Text;
+         end if;
+         Scroll_Offset := -5; -- Start with text off-screen to the right
+         Scroll_Speed_Ticks := Speed / 3;
+         if Scroll_Speed_Ticks <= 0 then
+            Scroll_Speed_Ticks := 1;
+         end if;
+      end Start_Scroll;
+
+      procedure Advance_Scroll is
+         Total_Pixels : constant Integer := Scroll_Length * 6; -- 5 for char, 1 for space
+      begin
+         if Mode = Scrolling then
+            Scroll_Offset := Scroll_Offset + 1;
+            if Scroll_Offset >= Total_Pixels then
+               Scroll_Offset := -5; -- Loop back
+            end if;
+         end if;
+      end Advance_Scroll;
+
+      function Get return Matrix is
+         Result : Matrix := (others => (others => False));
+         Char_Idx : Integer;
+         Col_In_Char : Integer;
+         C : Character;
+         Font_M : Microbit.Display.Font.Character_Matrix;
+      begin
+         if Mode = Static then
+            return Current_Image;
+         else
+            -- Calculate frame based on Scroll_Offset
+            for Screen_Col in 0 .. 4 loop
+               declare
+                  Global_Col : constant Integer := Scroll_Offset + Screen_Col;
+               begin
+                  if Global_Col >= 0 and Global_Col < Scroll_Length * 6 then
+                     Char_Idx := (Global_Col / 6) + 1;
+                     Col_In_Char := Global_Col mod 6;
+                     if Col_In_Char < 5 then -- 5th col is space
+                        C := Scroll_Buffer (Char_Idx);
+                        if C in ' ' .. '~' then
+                           Font_M := Microbit.Display.Font.Data (C);
+                           for Row in 0 .. 4 loop
+                              Result (Row, Screen_Col) := Font_M (Row, Col_In_Char);
+                           end loop;
+                        end if;
+                     end if;
+                  end if;
+               end;
+            end loop;
+            return Result;
+         end if;
       end Get;
+
+      function Get_Scroll_Ticks return Integer is
+      begin
+         return Scroll_Speed_Ticks;
+      end Get_Scroll_Ticks;
 
       procedure Start is
       begin
@@ -85,47 +162,47 @@ package body Microbit.Display is
    end Display_State;
 
    task Refresher is
-      pragma Priority (10); -- Give refresh task a decently high priority
+      pragma Priority (10);
    end Refresher;
 
    task body Refresher is
       Next_Time   : Time;
-      -- Refresh rate ~ 60 Hz total -> 5 rows, so each row gets ~3.3ms
       Period      : constant Time_Span := Milliseconds (3); 
       Current_Row : Integer := 0;
       Image       : Matrix;
+      Tick_Counter : Integer := 0;
    begin
       Display_State.Wait_To_Start;
       Next_Time := Clock;
       
       loop
          if not Display_State.Is_Paused then
-            -- Turn off all columns and previous row to prevent ghosting
+            -- Handle scrolling tick
+            Tick_Counter := Tick_Counter + 1;
+            if Tick_Counter >= Display_State.Get_Scroll_Ticks then
+               Display_State.Advance_Scroll;
+               Tick_Counter := 0;
+            end if;
+
             for C in 0 .. 4 loop
-               Microbit.Pins.Set (Cols (C)); -- Col HIGH = Off
+               Microbit.Pins.Set (Cols (C));
             end loop;
             for R in 0 .. 4 loop
-               Microbit.Pins.Clear (Rows (R)); -- Row LOW = Off
+               Microbit.Pins.Clear (Rows (R));
             end loop;
 
-            -- Get current state safely
             Image := Display_State.Get;
 
-            -- Set current row columns (X is Col, Y is Row)
             for C in 0 .. 4 loop
                if Image (Current_Row, C) then
-                  Microbit.Pins.Clear (Cols (C)); -- Col LOW = On
+                  Microbit.Pins.Clear (Cols (C));
                end if;
             end loop;
 
-            -- Enable current row
-            Microbit.Pins.Set (Rows (Current_Row)); -- Row HIGH = On
-
+            Microbit.Pins.Set (Rows (Current_Row));
             Current_Row := (Current_Row + 1) mod 5;
          else
-            -- When paused, ensure LEDs are off so they don't interfere
-            -- (Unless the sensing logic is actively driving them)
-            null;
+            Tick_Counter := 0;
          end if;
          
          Next_Time := Next_Time + Period;
@@ -135,19 +212,16 @@ package body Microbit.Display is
 
    procedure Initialize is
    begin
-      -- Configure Rows as outputs and default Low
       for R in 0 .. 4 loop
          Microbit.Pins.Configure (Rows (R), Mode => Microbit.Pins.Output);
          Microbit.Pins.Clear (Rows (R));
       end loop;
       
-      -- Configure Cols as outputs and default High
       for C in 0 .. 4 loop
          Microbit.Pins.Configure (Cols (C), Mode => Microbit.Pins.Output);
          Microbit.Pins.Set (Cols (C));
       end loop;
       
-      -- Start the background refresh task
       Display_State.Start;
    end Initialize;
 
@@ -166,16 +240,20 @@ package body Microbit.Display is
       Display_State.Set_Pixel (X, Y, State);
    end Set_Pixel;
 
+   procedure Scroll (Text : String; Delay_Ms : Integer := 150) is
+   begin
+      Display_State.Start_Scroll (Text, Delay_Ms);
+   end Scroll;
+
    procedure Pause is
    begin
       Display_State.Pause;
       
-      -- Ensure pins are in a neutral state when paused
       for C in 0 .. 4 loop
-         Microbit.Pins.Set (Cols (C)); -- Col HIGH
+         Microbit.Pins.Set (Cols (C));
       end loop;
       for R in 0 .. 4 loop
-         Microbit.Pins.Clear (Rows (R)); -- Row LOW
+         Microbit.Pins.Clear (Rows (R));
       end loop;
    end Pause;
 

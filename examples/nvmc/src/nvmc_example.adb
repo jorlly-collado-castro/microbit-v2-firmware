@@ -1,7 +1,9 @@
 with Microbit.Console;
+with Microbit.Display;
 with Microbit.NVMC;
 with Microbit.Buttons;
 with System;
+with Ada.Real_Time; use Ada.Real_Time;
 
 procedure Nvmc_Example is
    --  Use the very last page of flash to avoid overwriting our own code!
@@ -21,8 +23,18 @@ procedure Nvmc_Example is
       Microbit.Console.Put_Line (Val'Image);
    end Put_Hex;
 
+   procedure Update_Display is
+      --  'Image adds a leading space, we can trim it by taking a slice.
+      Num_Str : constant String := Saved_Counter'Image;
+      Msg     : constant String :=
+        Num_Str (Num_Str'First + 1 .. Num_Str'Last) & "   ";
+   begin
+      Microbit.Display.Scroll (Msg, 100); -- Scroll a bit faster
+   end Update_Display;
+
 begin
    Microbit.Console.Initialize;
+   Microbit.Display.Initialize;
    Microbit.Buttons.Initialize;
 
    Microbit.Console.Put_Line ("Starting NVMC Flash Storage Example...");
@@ -38,6 +50,8 @@ begin
    else
       Saved_Counter := Read_Value;
    end if;
+
+   Update_Display;
 
    Microbit.Console.Put_Line
      ("Press Button A to increment and save counter to Flash.");
@@ -59,12 +73,13 @@ begin
          Microbit.NVMC.Write_Word (Page_Address, Saved_Counter);
 
          Microbit.Console.Put_Line ("Saved!");
+         Update_Display;
 
          --  Wait for release
          while Microbit.Buttons.State (Microbit.Buttons.Button_A) =
                Microbit.Buttons.Pressed
          loop
-            null;
+            delay until Clock + Milliseconds (10);
          end loop;
 
       elsif Microbit.Buttons.State (Microbit.Buttons.Button_B) =
@@ -76,13 +91,15 @@ begin
          Saved_Counter := 16#FFFF_FFFF#;
 
          Microbit.Console.Put_Line ("Page Erased!");
+         Update_Display;
 
          --  Wait for release
          while Microbit.Buttons.State (Microbit.Buttons.Button_B) =
                Microbit.Buttons.Pressed
          loop
-            null;
+            delay until Clock + Milliseconds (10);
          end loop;
       end if;
+      delay until Clock + Milliseconds (50);
    end loop;
 end Nvmc_Example;

@@ -30,4 +30,9 @@ package Microbit.Display is
       (False, True,  True,  True,  False),
       (False, False, True,  False, False));
 
+   --  Scroll text continuously in the background.
+   --  Delay_Ms defines the speed (lower is faster).
+   procedure Scroll (Text : String; Delay_Ms : Integer := 150)
+     with Pre => Text'Length <= 255 and Delay_Ms > 0;
+
 end Microbit.Display;
