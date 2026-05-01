@@ -7,13 +7,13 @@ project Nvmc is
    for Object_Dir use "obj/" & Nvmc_Config.Build_Profile;
    for Create_Missing_Dirs use "True";
    for Exec_Dir use "bin";
-   for Main use ("nvmc_example.adb");
+   for Main use ("nvmc.adb");
 
    for Target use "arm-eabi";
    for Runtime ("Ada") use "light-tasking-nrf52833";
 
    package Compiler is
-      for Default_Switches ("Ada") use Nvmc_Config.Ada_Compiler_Switches &
+      for Default_Switches ("Ada") use Nvmc_Config.Ada_Compiler_Switches & ("-gnat2022") &
          ("-gnat2022",
           "-gnatp",
           "-mfloat-abi=hard",
