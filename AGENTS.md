@@ -50,3 +50,31 @@ Agents modifying low-level hardware functionality **must** reference `/docs/HAL_
 *   **Local First**: When an agent gets stuck, needs to understand hardware behavior, or requires implementation details, it **MUST** consult the local reference repositories stored in `docs/reference_implementations/` (e.g., `codal-core`, `codal-nrf52`, `microbit-v2-hardware`) using search tools like `grep`, `find`, or the bash shell. 
 *   **Avoid Redundant Fetching**: Do not use commands like `curl` or `wget` to query external GitHub repositories if the information can be found in the local reference directories. This ensures faster searches and provides better codebase context.
 *   **Caching New Sources**: If an agent needs to reference a new external source (such as a new C++ library or schematic repository) that is not currently present, the agent **MUST** clone or download that new source into the `docs/reference_implementations/` directory so it is available for future use.
+
+## Formal Verification (SPARK 2014)
+
+The project enforces `pragma SPARK_Mode (On)` globally via `gnat.adc`. Absence of Runtime Errors (AoRTE) must be mathematically proven at level 4 (`gnatprove --level=4 -j0`). Agents must follow these strict SPARK guidelines:
+
+*   **Volatile Contexts**: SPARK heavily restricts volatile function calls (e.g., hardware register reads or `Ada.Real_Time.Clock`) within expressions or interacting contexts (raising `E0004`). 
+    *   **Rule**: Decouple volatile reads into strictly separated local declarations before using them in logic, conditionals, or loop parameters.
+    *   *Good*: `declare Now : constant Time := Clock; begin delay until Now + Milliseconds (50); end;`
+    *   *Bad*: `delay until Clock + Milliseconds (50);` or `if Clock > Target then...`
+*   **Integer Overflow & Two's Complement**: Negating the lowest bound of a signed integer (e.g., `-32768` for `Integer_16`) causes an overflow because the maximum positive value is `32767`.
+    *   **Rule**: Use saturated negation or explicitly constrained types when converting raw hardware data or mapping axes. (e.g., `(if Val = Integer_16'First then Integer_16'Last else -Val)`).
+*   **Loop Variants & Termination**: The prover needs help terminating loops that rely on external state. Always provide loop invariants (`pragma Loop_Invariant`) and loop variants (`pragma Loop_Variant`), or ensure the prover can statically deduce termination constraints.
+*   **Floating-Point Bounds**: SPARK requires mathematically proven bounds for all floating-point arithmetic. Unbounded external inputs (like raw magnetometer floats) can cause "float overflow check might fail" warnings. Constrain them using subtypes or explicit clamping where safety is critical.
+
+## Ada 2022 Standards Compliance & Best Practices
+
+This codebase targets the latest Ada 2022 standard (`-gnat2022`). Agents must write modern, idiomatic Ada, preferring new constructs over legacy Ada 95/2012 paradigms:
+
+*   **Target Name Symbol (`@`)**: Use the `@` symbol for accumulator/update assignments to reduce verbosity and duplication.
+    *   *Good*: `Sum := @ + Value;`
+    *   *Bad*: `Sum := Sum + Value;`
+*   **Square Brackets for Arrays**: Use bracket syntax for array aggregates to clearly differentiate them from function calls.
+    *   *Good*: `Data : array (1 .. 3) of Integer := [1, 2, 3];`
+    *   *Bad*: `Data : array (1 .. 3) of Integer := (1, 2, 3);`
+*   **Expression Functions**: For simple getters or concise logic, use expression functions instead of full bodies.
+    *   *Good*: `function Is_Ready return Boolean is (Status = 1);`
+*   **Declare Blocks in Loop Bodies**: Heavily utilize local `declare` blocks to cleanly scope temporary variables, especially for grabbing `Clock` values before `delay until` calls.
+*   **Hardware Coordinate Systems**: Remember that raw IC axes rarely match the physical board's logical axes. Always explicitly document and implement coordinate mappings (e.g., ENU, North-East-Down, Simple Cartesian) rather than blindly assigning `X = Raw_X`. Use `docs/reference_implementations/` to reverse-engineer standard transformations.

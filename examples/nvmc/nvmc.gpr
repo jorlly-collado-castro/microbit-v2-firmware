@@ -1,19 +1,19 @@
-with "config/sensors_config.gpr";
+with "config/nvmc_config.gpr";
 with "../../microbit_v2.gpr";
 
-project Sensors is
+project Nvmc is
 
    for Source_Dirs use ("src/", "config/");
-   for Object_Dir use "obj/" & Sensors_Config.Build_Profile;
+   for Object_Dir use "obj/" & Nvmc_Config.Build_Profile;
    for Create_Missing_Dirs use "True";
    for Exec_Dir use "bin";
-   for Main use ("sensors.adb");
+   for Main use ("nvmc.adb");
 
    for Target use "arm-eabi";
    for Runtime ("Ada") use "light-tasking-nrf52833";
 
    package Compiler is
-      for Default_Switches ("Ada") use Sensors_Config.Ada_Compiler_Switches & ("-gnat2022") &
+      for Default_Switches ("Ada") use Nvmc_Config.Ada_Compiler_Switches & ("-gnat2022") &
          ("-gnat2022",
           "-gnatp",
           "-mfloat-abi=hard",
@@ -28,4 +28,4 @@ project Sensors is
       for Artifacts (".") use ("share");
    end Install;
 
-end Sensors;
+end Nvmc;

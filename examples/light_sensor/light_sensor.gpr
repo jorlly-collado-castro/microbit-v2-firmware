@@ -13,7 +13,7 @@ project Light_Sensor is
    for Runtime ("Ada") use "light-tasking-nrf52833";
 
    package Compiler is
-      for Default_Switches ("Ada") use Light_Sensor_Config.Ada_Compiler_Switches &
+      for Default_Switches ("Ada") use Light_Sensor_Config.Ada_Compiler_Switches & ("-gnat2022") &
          ("-gnat2022",
           "-gnatp",
           "-mfloat-abi=hard",

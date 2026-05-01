@@ -27,14 +27,8 @@ package body Microbit.PWM is
 
    procedure Initialize is
       use System.Storage_Elements;
-      Run_Mic_Pin : constant Microbit.Pins.Pin_Id := (Microbit.Pins.Port_0, 20);
       GPIO0 : GPIO_Peripheral with Import, Address => P0_Base;
    begin
-      --  Enable the on-board amplifier/microphone regulator
-      Microbit.Pins.Configure (Run_Mic_Pin, Mode => Microbit.Pins.Output, Pull => Microbit.Pins.Disabled);
-      GPIO0.PIN_CNF (Natural (Run_Mic_Pin.Pin)).DRIVE := H0H1;
-      Microbit.Pins.Set (Run_Mic_Pin);
-
       Microbit.Pins.Configure (Speaker_Pin, Mode => Microbit.Pins.Output, Pull => Microbit.Pins.Disabled);
       --  Set Speaker pin to High Drive to ensure sufficient current for the magnetic coil
       GPIO0.PIN_CNF (Natural (Speaker_Pin.Pin)).DRIVE := H0H1;

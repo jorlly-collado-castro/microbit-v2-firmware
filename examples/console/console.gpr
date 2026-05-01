@@ -13,7 +13,7 @@ project Console is
 
    package Compiler is
       for Switches ("Ada") use (
-         "-g", "-O2", "-gnatwa", "-gnatQ", "-gnat12", "-gnatw.X",
+         "-g", "-O2", "-gnatwa", "-gnatQ", "-gnat2022", "-gnatw.X",
          "-mfloat-abi=hard", "-mfpu=fpv4-sp-d16"
       );
    end Compiler;

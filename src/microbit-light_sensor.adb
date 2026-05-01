@@ -9,11 +9,11 @@ package body Microbit.Light_Sensor is
 
    --  Cols are needed to ensure they are driven high
    Cols : constant array (0 .. 4) of Microbit.Pins.Pin_Id :=
-     ((Microbit.Pins.Port_0, 28),
+     [(Microbit.Pins.Port_0, 28),
       (Microbit.Pins.Port_0, 11),
       (Microbit.Pins.Port_0, 31),
       (Microbit.Pins.Port_1,  5),
-      (Microbit.Pins.Port_0, 30));
+      (Microbit.Pins.Port_0, 30)];
 
    procedure Read (Level : out Natural) is
       Count     : Natural := 0;
@@ -42,29 +42,21 @@ package body Microbit.Light_Sensor is
       --  4. Measure how long it takes for the pin to float HIGH (LoToHi)
       --     More light = faster discharge = lower count.
       while not Microbit.Pins.Read (Row_0) and Count < Max_Count loop
-         Count := Count + 1;
+         Count := @ + 1;
       end loop;
 
       --  5. Convert the count to a 0-255 brightness scale.
       --     If it timed out (Count = Max_Count), it's very dark (Level = 0).
       --     If it was instant (Count ~ 0), it's very bright (Level = 255).
-      if Count >= Max_Count then
-         Level := 0;
-      else
-         --  Scale it. (Adjust the divisor based on actual hardware testing).
-         --  Typically, Count might be a few thousand in normal light.
-         declare
-            Scaled : constant Integer := 255 - (Count / 100);
-         begin
-            if Scaled < 0 then
-               Level := 0;
-            elsif Scaled > 255 then
-               Level := 255;
-            else
-               Level := Natural (Scaled);
-            end if;
-         end;
-      end if;
+      Level :=
+        (if Count >= Max_Count then 0
+         else
+           (declare
+               Scaled : constant Integer := 255 - (Count / 100);
+            begin
+               (if Scaled < 0 then 0
+                elsif Scaled > 255 then 255
+                else Natural (Scaled))));
 
       --  6. Restore Row 0 back to Output Low (Display's neutral paused state)
       Microbit.Pins.Configure (Row_0, Mode => Microbit.Pins.Output);

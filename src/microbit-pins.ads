@@ -7,7 +7,9 @@ package Microbit.Pins is
    type Pin_Id is record
       Port : Port_Id;
       Pin  : Pin_Number;
-   end record;
+   end record
+     with Dynamic_Predicate =>
+       (if Pin_Id.Port = Port_1 then Pin_Id.Pin in 0 .. 9);
 
    type Pin_Mode is (Input, Output);
    type Pull_Resistor is (Disabled, Pull_Down, Pull_Up);

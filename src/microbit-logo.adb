@@ -96,7 +96,7 @@ package body Microbit.Logo is
 
       --  Calibration / Baseline calculation
       for I in 1 .. 10 loop
-         Sum := Sum + Measure_Charge_Time;
+         Sum := @ + Measure_Charge_Time;
          for J in 1 .. 50_000 loop
             null;
          end loop;
@@ -123,7 +123,7 @@ package body Microbit.Logo is
             end if;
          end if;
          delay until Next_Time;
-         Next_Time := Next_Time + Milliseconds (50);
+         Next_Time := @ + Milliseconds (50);
       end loop;
    end Logo_Sampler;
 
