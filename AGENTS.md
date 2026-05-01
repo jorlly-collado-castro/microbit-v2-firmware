@@ -4,6 +4,8 @@ This document tracks how autonomous agents interact with the `microbit-v2-firmwa
 
 ## Commits & Source Control
 
+**CRITICAL RULE: DO NOT take any git actions (commit, push, merge, branching, etc.) or close GitHub issues unless explicitly requested by the user.** Agents must provide the implementation, wait for the user to test and verify on hardware, and only commit when explicitly instructed to do so.
+
 All agents working on this project must adhere strictly to **Atomic Commits**.
 
 *   **Atomic Commits**: One commit per logical unit of work. For example, adding the I2C driver is one commit; modifying the build file to include FPU support is another.
