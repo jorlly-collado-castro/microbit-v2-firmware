@@ -61,8 +61,15 @@ package body Microbit.Pins is
    end Clear;
 
    procedure Toggle (Pin : Pin_Id) is
+      Is_High : Boolean;
    begin
-      if Read (Pin) then
+      if Pin.Port = Port_0 then
+         Is_High := P0_Periph.OUT_k.Arr (Integer (Pin.Pin)) = High;
+      else
+         Is_High := P1_Periph.OUT_k.Arr (Integer (Pin.Pin)) = High;
+      end if;
+
+      if Is_High then
          Clear (Pin);
       else
          Set (Pin);

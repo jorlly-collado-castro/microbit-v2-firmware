@@ -17,7 +17,7 @@ package body Microbit.I2C is
          Dummy : Integer := 0 with Volatile;
       begin
          for I in 1 .. Ticks loop
-            Dummy := Dummy + I;
+            Dummy := @ + I;
          end loop;
       end Wait_US;
    begin
@@ -90,7 +90,7 @@ package body Microbit.I2C is
    end Check_Error;
 
    procedure Write
-     (Address : Unsigned_8;
+     (Address : Device_Address;
       Data    : Data_Buffer)
    is
       use System.Storage_Elements;
@@ -100,7 +100,7 @@ package body Microbit.I2C is
       TWIM0_Periph.EVENTS_STOPPED := (EVENTS_STOPPED => NotGenerated, Reserved_1_31 => 0);
       TWIM0_Periph.EVENTS_ERROR   := (EVENTS_ERROR   => NotGenerated, Reserved_1_31 => 0);
 
-      TWIM0_Periph.ADDRESS.ADDRESS := ADDRESS_ADDRESS_Field (Address mod 128);
+      TWIM0_Periph.ADDRESS.ADDRESS := ADDRESS_ADDRESS_Field (Address);
 
       TWIM0_Periph.TXD.PTR := UInt32 (To_Integer (Data'Address));
       TWIM0_Periph.TXD.MAXCNT.MAXCNT := MAXCNT_TXD_MAXCNT_Field (Data'Length);
@@ -118,7 +118,7 @@ package body Microbit.I2C is
             TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = NotGenerated and then
             Timeout > 0
       loop
-         Timeout := Timeout - 1;
+         Timeout := @ - 1;
       end loop;
 
       if TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = Generated or Timeout = 0 then
@@ -127,7 +127,7 @@ package body Microbit.I2C is
          TWIM0_Periph.TASKS_STOP.TASKS_STOP := Trigger;
          Timeout := 100_000;
          while TWIM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED = NotGenerated and then Timeout > 0 loop
-            Timeout := Timeout - 1;
+            Timeout := @ - 1;
          end loop;
 
          --  Clear Error Source by writing 1s to the set bits
@@ -142,7 +142,7 @@ package body Microbit.I2C is
    end Write;
 
    procedure Read
-     (Address : Unsigned_8;
+     (Address : Device_Address;
       Data    : out Data_Buffer)
    is
       use System.Storage_Elements;
@@ -152,7 +152,7 @@ package body Microbit.I2C is
       TWIM0_Periph.EVENTS_STOPPED := (EVENTS_STOPPED => NotGenerated, Reserved_1_31 => 0);
       TWIM0_Periph.EVENTS_ERROR   := (EVENTS_ERROR   => NotGenerated, Reserved_1_31 => 0);
 
-      TWIM0_Periph.ADDRESS.ADDRESS := ADDRESS_ADDRESS_Field (Address mod 128);
+      TWIM0_Periph.ADDRESS.ADDRESS := ADDRESS_ADDRESS_Field (Address);
 
       TWIM0_Periph.RXD.PTR := UInt32 (To_Integer (Data'Address));
       TWIM0_Periph.RXD.MAXCNT.MAXCNT := MAXCNT_RXD_MAXCNT_Field (Data'Length);
@@ -170,7 +170,7 @@ package body Microbit.I2C is
             TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = NotGenerated and then
             Timeout > 0
       loop
-         Timeout := Timeout - 1;
+         Timeout := @ - 1;
       end loop;
 
       if TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = Generated or Timeout = 0 then
@@ -179,7 +179,7 @@ package body Microbit.I2C is
          TWIM0_Periph.TASKS_STOP.TASKS_STOP := Trigger;
          Timeout := 100_000;
          while TWIM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED = NotGenerated and then Timeout > 0 loop
-            Timeout := Timeout - 1;
+            Timeout := @ - 1;
          end loop;
 
          --  Clear Error Source by writing 1s to the set bits
@@ -196,18 +196,18 @@ package body Microbit.I2C is
    end Read;
 
    procedure Write_Register
-     (Address : Unsigned_8;
+     (Address : Device_Address;
       Reg     : Unsigned_8;
       Val     : Unsigned_8)
    is
       --  EasyDMA needs data in RAM, so we copy it to a local array
-      Buf : aliased constant Data_Buffer (1 .. 2) := (Reg, Val);
+      Buf : aliased constant Data_Buffer (1 .. 2) := [Reg, Val];
    begin
       Write (Address, Buf);
    end Write_Register;
 
    procedure Read_Register
-     (Address : Unsigned_8;
+     (Address : Device_Address;
       Reg     : Unsigned_8;
       Data    : out Data_Buffer)
    is
@@ -219,7 +219,7 @@ package body Microbit.I2C is
       TWIM0_Periph.EVENTS_STOPPED := (EVENTS_STOPPED => NotGenerated, Reserved_1_31 => 0);
       TWIM0_Periph.EVENTS_ERROR   := (EVENTS_ERROR   => NotGenerated, Reserved_1_31 => 0);
 
-      TWIM0_Periph.ADDRESS.ADDRESS := ADDRESS_ADDRESS_Field (Address mod 128);
+      TWIM0_Periph.ADDRESS.ADDRESS := ADDRESS_ADDRESS_Field (Address);
 
       --  TX buffer: the register address
       TWIM0_Periph.TXD.PTR := UInt32 (To_Integer (Reg_Buf'Address));
@@ -243,7 +243,7 @@ package body Microbit.I2C is
             TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = NotGenerated and then
             Timeout > 0
       loop
-         Timeout := Timeout - 1;
+         Timeout := @ - 1;
       end loop;
 
       if TWIM0_Periph.EVENTS_ERROR.EVENTS_ERROR = Generated or Timeout = 0 then
@@ -252,7 +252,7 @@ package body Microbit.I2C is
          TWIM0_Periph.TASKS_STOP.TASKS_STOP := Trigger;
          Timeout := 100_000;
          while TWIM0_Periph.EVENTS_STOPPED.EVENTS_STOPPED = NotGenerated and then Timeout > 0 loop
-            Timeout := Timeout - 1;
+            Timeout := @ - 1;
          end loop;
 
          --  Clear Error Source by writing 1s to the set bits
