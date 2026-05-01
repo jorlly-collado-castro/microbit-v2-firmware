@@ -16,3 +16,4 @@ examples/**/config/
 examples/**/obj/
 scripts/
 docs/reference_implementations/
+/docs/reference_docs
