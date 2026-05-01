@@ -22,6 +22,8 @@ services:
       echo 'Building parrot...' && cd /workspace/examples/parrot && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/parrot bin/parrot.hex &&
       echo 'Building sound_meter...' && cd /workspace/examples/sound_meter && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/sound_meter bin/sound_meter.hex &&
       echo 'Building logo_touch...' && cd /workspace/examples/logo_touch && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/logo_touch bin/logo_touch.hex &&
+      echo 'Building temperature...' && cd /workspace/examples/temperature && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/temperature bin/temperature.hex &&
+      echo 'Building light_sensor...' && cd /workspace/examples/light_sensor && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/light_sensor bin/light_sensor.hex &&
       echo 'All examples built successfully!'
       "
 

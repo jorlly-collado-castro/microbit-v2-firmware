@@ -9,6 +9,13 @@ This directory contains example applications demonstrating how to use the `micro
 *   **Display** (`examples/display/`): Shows a moving pixel on the LED matrix using the background Ravenscar task.
 *   **Sensors** (`examples/sensors/`): Reads the LSM303AGR accelerometer and magnetometer via I2C and prints values to the console.
 *   **Compass** (`examples/compass/`): Computes 2D heading (0-360 degrees) after a 10-second hard-iron calibration routine.
+*   **Audio** (`examples/audio/`): Plays a scale of musical notes using the PWM module.
+*   **Wav_Player** (`examples/wav_player/`): Plays a raw PCM audio clip over the onboard speaker with in-place scaling.
+*   **Parrot** (`examples/parrot/`): Records audio via the analog microphone (SAADC) into a buffer and plays it back when the 'A' button is pressed.
+*   **Sound_Meter** (`examples/sound_meter/`): Displays real-time audio volume (SPL) as a bar graph on the LED matrix using Ravenscar multitasking.
+*   **Logo_Touch** (`examples/logo_touch/`): Interactive LED animation that responds to touching the capacitive logo pad, demonstrating GPIOTE and PPI interaction.
+*   **Temperature** (`examples/temperature/`): Reads the nRF52833's internal die temperature sensor and prints it to the serial console.
+*   **Light_Sensor** (`examples/light_sensor/`): Uses the LED matrix in reverse-bias mode to sense ambient light levels and prints the value to the serial console.
 
 ## 1. Building the Examples
 

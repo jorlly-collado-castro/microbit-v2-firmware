@@ -25,10 +25,14 @@ package body Microbit.Display is
         with Pre => X in 0 .. 4 and Y in 0 .. 4;
       function Get return Matrix;
       procedure Start;
+      procedure Pause;
+      procedure Resume;
+      function Is_Paused return Boolean;
       entry Wait_To_Start;
    private
       Current_Image : Matrix := (others => (others => False));
       Is_Started    : Boolean := False;
+      Paused        : Boolean := False;
    end Display_State;
 
    protected body Display_State is
@@ -59,6 +63,21 @@ package body Microbit.Display is
          Is_Started := True;
       end Start;
 
+      procedure Pause is
+      begin
+         Paused := True;
+      end Pause;
+
+      procedure Resume is
+      begin
+         Paused := False;
+      end Resume;
+
+      function Is_Paused return Boolean is
+      begin
+         return Paused;
+      end Is_Paused;
+
       entry Wait_To_Start when Is_Started is
       begin
          null;
@@ -80,28 +99,34 @@ package body Microbit.Display is
       Next_Time := Clock;
       
       loop
-         -- Turn off all columns and previous row to prevent ghosting
-         for C in 0 .. 4 loop
-            Microbit.Pins.Set (Cols (C)); -- Col HIGH = Off
-         end loop;
-         for R in 0 .. 4 loop
-            Microbit.Pins.Clear (Rows (R)); -- Row LOW = Off
-         end loop;
+         if not Display_State.Is_Paused then
+            -- Turn off all columns and previous row to prevent ghosting
+            for C in 0 .. 4 loop
+               Microbit.Pins.Set (Cols (C)); -- Col HIGH = Off
+            end loop;
+            for R in 0 .. 4 loop
+               Microbit.Pins.Clear (Rows (R)); -- Row LOW = Off
+            end loop;
 
-         -- Get current state safely
-         Image := Display_State.Get;
+            -- Get current state safely
+            Image := Display_State.Get;
 
-         -- Set current row columns (X is Col, Y is Row)
-         for C in 0 .. 4 loop
-            if Image (Current_Row, C) then
-               Microbit.Pins.Clear (Cols (C)); -- Col LOW = On
-            end if;
-         end loop;
+            -- Set current row columns (X is Col, Y is Row)
+            for C in 0 .. 4 loop
+               if Image (Current_Row, C) then
+                  Microbit.Pins.Clear (Cols (C)); -- Col LOW = On
+               end if;
+            end loop;
 
-         -- Enable current row
-         Microbit.Pins.Set (Rows (Current_Row)); -- Row HIGH = On
+            -- Enable current row
+            Microbit.Pins.Set (Rows (Current_Row)); -- Row HIGH = On
 
-         Current_Row := (Current_Row + 1) mod 5;
+            Current_Row := (Current_Row + 1) mod 5;
+         else
+            -- When paused, ensure LEDs are off so they don't interfere
+            -- (Unless the sensing logic is actively driving them)
+            null;
+         end if;
          
          Next_Time := Next_Time + Period;
          delay until Next_Time;
@@ -140,5 +165,23 @@ package body Microbit.Display is
    begin
       Display_State.Set_Pixel (X, Y, State);
    end Set_Pixel;
+
+   procedure Pause is
+   begin
+      Display_State.Pause;
+      
+      -- Ensure pins are in a neutral state when paused
+      for C in 0 .. 4 loop
+         Microbit.Pins.Set (Cols (C)); -- Col HIGH
+      end loop;
+      for R in 0 .. 4 loop
+         Microbit.Pins.Clear (Rows (R)); -- Row LOW
+      end loop;
+   end Pause;
+
+   procedure Resume is
+   begin
+      Display_State.Resume;
+   end Resume;
 
 end Microbit.Display;

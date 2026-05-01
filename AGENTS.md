@@ -4,6 +4,8 @@ This document tracks how autonomous agents interact with the `microbit-v2-firmwa
 
 ## Commits & Source Control
 
+**CRITICAL RULE: DO NOT take any git actions (commit, push, merge, branching, etc.) or close GitHub issues unless explicitly requested by the user.** Agents must provide the implementation, wait for the user to test and verify on hardware, and only commit when explicitly instructed to do so.
+
 All agents working on this project must adhere strictly to **Atomic Commits**.
 
 *   **Atomic Commits**: One commit per logical unit of work. For example, adding the I2C driver is one commit; modifying the build file to include FPU support is another.
@@ -13,6 +15,15 @@ All agents working on this project must adhere strictly to **Atomic Commits**.
     *   `fix: <Description>` for bug fixes in memory/register mapping.
     *   `docs: <Description>` for updating this markdown file, SVD docs, or inline Ada code.
     *   `chore: <Description>` for Alire toolchain/crate maintenance.
+
+## Documentation Guidelines
+
+Agents **MUST** always update relevant documentation before committing meaningful code changes. This ensures the project remains continuously documented in sync with the codebase.
+
+*   **Update Examples README**: Whenever a new example is added or modified, update `examples/README.md` to reflect the new functionality.
+*   **Update Root README**: Keep the root `README.md` (if it exists) updated with the current state of the project, including newly supported hardware peripherals.
+*   **Update API Comments**: When creating or modifying HAL specifications (`.ads`), add or update SPARK contracts and explanatory comments.
+*   **Track State**: Leave clear traces of the current state of features, either in READMEs, or by creating/updating GitHub Issues when a task is partially completed or scoped for future work.
 
 ## Build System (`alr`) Usage
 
