@@ -16,6 +16,7 @@ This directory contains example applications demonstrating how to use the `micro
 *   **Logo_Touch** (`examples/logo_touch/`): Interactive LED animation that responds to touching the capacitive logo pad, demonstrating GPIOTE and PPI interaction.
 *   **Temperature** (`examples/temperature/`): Reads the nRF52833's internal die temperature sensor and prints it to the serial console.
 *   **Light_Sensor** (`examples/light_sensor/`): Uses the LED matrix in reverse-bias mode to sense ambient light levels and prints the value to the serial console.
+*   **NVMC** (`examples/nvmc/`): Demonstrates Non-Volatile Memory Controller (NVMC) usage by persistently saving a counter to the internal flash memory.
 
 ## 1. Building the Examples
 

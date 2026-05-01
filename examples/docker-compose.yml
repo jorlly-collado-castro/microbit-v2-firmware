@@ -24,6 +24,7 @@ services:
       echo 'Building logo_touch...' && cd /workspace/examples/logo_touch && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/logo_touch bin/logo_touch.hex &&
       echo 'Building temperature...' && cd /workspace/examples/temperature && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/temperature bin/temperature.hex &&
       echo 'Building light_sensor...' && cd /workspace/examples/light_sensor && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/light_sensor bin/light_sensor.hex &&
+      echo 'Building nvmc...' && cd /workspace/examples/nvmc && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/nvmc_example bin/nvmc_example.hex &&
       echo 'All examples built successfully!'
       "
 
