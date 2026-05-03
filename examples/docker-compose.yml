@@ -18,8 +18,6 @@ services:
       echo 'Building sensors...' && cd /workspace/examples/sensors && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/sensors bin/sensors.hex &&
       echo 'Building compass...' && cd /workspace/examples/compass && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/compass bin/compass.hex &&
       echo 'Building spi_loopback...' && cd /workspace/examples/spi_loopback && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/spi_loopback bin/spi_loopback.hex &&
-      echo 'Building neopixel_test...' && cd /workspace/examples/neopixel_test && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/neopixel_test bin/neopixel_test.hex &&
-      echo 'Building neopixel_wave...' && cd /workspace/examples/neopixel_wave && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/neopixel_wave bin/neopixel_wave.hex &&
       echo 'Building audio...' && cd /workspace/examples/audio && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/audio bin/audio.hex &&
       echo 'Building wav_player...' && cd /workspace/examples/wav_player && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/wav_player bin/wav_player.hex &&
       echo 'Building parrot...' && cd /workspace/examples/parrot && alr --non-interactive build && arm-none-eabi-objcopy -O ihex bin/parrot bin/parrot.hex &&
