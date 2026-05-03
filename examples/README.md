@@ -17,6 +17,9 @@ This directory contains example applications demonstrating how to use the `micro
 *   **Temperature** (`examples/temperature/`): Reads the nRF52833's internal die temperature sensor and prints it to the serial console.
 *   **Light_Sensor** (`examples/light_sensor/`): Uses the LED matrix in reverse-bias mode to sense ambient light levels and prints the value to the serial console.
 *   **NVMC** (`examples/nvmc/`): Demonstrates Non-Volatile Memory Controller (NVMC) usage by persistently saving a counter to the internal flash memory.
+*   **SPI Loopback** (`examples/spi_loopback/`): Demonstrates high-speed SPIM/EasyDMA transactions by looping bits from MOSI to MISO.
+*   **NeoPixel Test** (`examples/neopixel_test/`): Blinks the first 4 LEDs on an external WS2812B NeoPixel strip using PWM EasyDMA timing.
+*   **NeoPixel Wave** (`examples/neopixel_wave/`): Advanced Cylon/Knight-Rider style animation bouncing across a NeoPixel strip with trailing tails.
 
 ## 1. Building the Examples
 
