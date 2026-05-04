@@ -9,12 +9,40 @@ This document tracks how autonomous agents interact with the `microbit-v2-firmwa
 All agents working on this project must adhere strictly to **Atomic Commits**.
 
 *   **Atomic Commits**: One commit per logical unit of work. For example, adding the I2C driver is one commit; modifying the build file to include FPU support is another.
-*   **Commit Message Convention**: 
-    Commits should use standard conventional prefixes:
-    *   `feat: <Description>` for new HAL modules or drivers.
-    *   `fix: <Description>` for bug fixes in memory/register mapping.
-    *   `docs: <Description>` for updating this markdown file, SVD docs, or inline Ada code.
-    *   `chore: <Description>` for Alire toolchain/crate maintenance.
+*   **Conventional Commits Specification**:
+    The Conventional Commits Specification is a lightweight convention on top of commit messages which provides an easy set of rules for creating an explicit commit history, making it easier to write automated tools on top of your codebase. This convention agrees with Semantic Versioning, by describing the *features*, *fixes*, and *breaking changes* made in those commits.
+
+    According to this specification, a commit message should be structured as follows:
+    ```text
+    <type>[optional scope]: <description>
+
+    [optional body]
+
+    [optional footer(s)]
+    ```
+
+    **The Commit `<type>` Prefix**
+    Every commit message should be prefixed with a term that describes in one word the type of change involved in a commit. These prefixes can be one of the types below:
+    - `feat:` a new feature is introduced with the changes
+    - `fix:` a bug fix has occurred
+    - `chore:` changes that do not relate to a fix or feature and don't modify src or test files (for example updating dependencies)
+    - `refactor:` refactored code that neither fixes a bug nor adds a feature
+    - `docs:` updates to documentation such as a the README or other markdown files
+    - `style:` changes that do not affect the meaning of the code, likely related to code formatting such as white-space, missing semi-colons, and so on.
+    - `test:` including new or correcting previous tests
+    - `perf:` performance improvements
+    - `ci:` continuous integration related
+    - `build:` changes that affect the build system or external dependencies
+    - `revert:` reverts a previous commit
+
+    **The Commit Description**
+    Following the commit type, the description is a short subject line written in *all lowercase* with a character limit to encourage concise, succinct descriptions.
+
+    **The Commit Body**
+    The commit body can contain a more detailed explanation about the commit. We can include these details as Markdown as well.
+
+    **The Commit Footers**
+    The footers may contain further details about a commit, including external links, Issue# Refs, or Author details, etc. In addition to these details, a commit footer can have an optional type called `BREAKING CHANGE:` which is same as `!` after the *type(scope):* commit prefix (e.g. `fix!:`), indicating a breaking change. A `BREAKING_CHANGE` can be part of commits of any type.
 
 ## Documentation Guidelines
 
